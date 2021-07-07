@@ -2,7 +2,21 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import PagerView from "react-native-pager-view";
-
+import Auth from "./src/pages/Auth/AuthNavigator";
+import { NavigationContainer } from "@react-navigation/native";
+import { Provider as PaperProvider,DefaultTheme } from "react-native-paper";
+const theme = {
+  ...DefaultTheme,
+  dark: true,
+  roundness: 10,
+  mode: 
+  "adaptive",
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#2365BB',
+    accent: '#f1c40f',
+  },
+};
 function Component(data, index) {
   return (
     <View
@@ -32,15 +46,17 @@ function Component(data, index) {
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <PagerView initialPage={0} style={{ width: "100%", height: "100%" }}>
+    <PaperProvider theme={theme}>
+      <NavigationContainer>
+        <Auth />
+        {/* <PagerView initialPage={0} style={{ width: "100%", height: "100%" }}>
         <Component data={{ title: "okii" }} index={1} key="1" />
         <Component data={{ title: "okii" }} index={2} key="2" />
         <Component data={{ title: "okii" }} index={3} key="3" />
         <Component data={{ title: "okii" }} index={4} key="4" />
-      </PagerView>
-      <StatusBar style="auto" />
-    </View>
+      </PagerView> */}
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
 
