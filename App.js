@@ -1,8 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import PagerView from "react-native-pager-view";
-import Auth from "./src/pages/Auth/AuthNavigator";
+import Auth from "./src/pages/AuthNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider as PaperProvider,DefaultTheme } from "react-native-paper";
 const theme = {
