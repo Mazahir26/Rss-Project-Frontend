@@ -16,10 +16,10 @@ import {
   Inter_600SemiBold,
   Inter_400Regular,
 } from "@expo-google-fonts/inter";
-export default function login({ navigation }) {
+export default function login({ navigation, Setcontext }) {
   const [showpassword, setshowpassword] = useState(false);
-  const [username, setusername] = useState(null);
-  const [password, setpassword] = useState(null);
+  const [username, setusername] = useState("Tester");
+  const [password, setpassword] = useState("Mazahir@123");
   const [message, setmessage] = useState(null);
 
   let [fontsLoaded] = useFonts({
@@ -28,7 +28,12 @@ export default function login({ navigation }) {
   });
 
   function login() {
-    if (username == null || username == "" || password == null || password == "" ) {
+    if (
+      username == null ||
+      username == "" ||
+      password == null ||
+      password == ""
+    ) {
       setmessage("Please fill in your details");
       return;
     }
@@ -48,16 +53,20 @@ export default function login({ navigation }) {
       axios
         .post("/login", data)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data.token,"  ========bchsbh");
+          Setcontext(res.data.token);
           setmessage(null);
         })
         .catch((err) => {
-          if (err.response.data.error) {
+          if (err.response == null) {
+            setmessage("Something went wrong, Please try again");
+          } else if (err.response.data == null) {
+            setmessage("Something went wrong, Please try again");
+          } else if (err.response.data.error) {
             setmessage(err.response.data.error);
           } else {
             setmessage("Something went wrong, Please try again");
           }
-          console.log(err.response.data);
         });
     }
   }
@@ -144,7 +153,9 @@ export default function login({ navigation }) {
           onPress={login}
           style={styles.button}
         >
-          <Text style={styles.buttonlable}>{ message != ""? "Login" : "Loading"}</Text>
+          <Text style={styles.buttonlable}>
+            {message != "" ? "Login" : "Loading"}
+          </Text>
         </TouchableRipple>
       </View>
       <TouchableOpacity
@@ -228,4 +239,3 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   },
 });
-

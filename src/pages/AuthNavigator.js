@@ -1,15 +1,17 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
+import React, { useContext } from "react";
 import Login from "./loginScreen";
 import Signup from "./signupScreen";
+import { Context } from "../Context/AuthContext";
 const Stack = createStackNavigator();
 
 export default function Auth() {
+  const {signup} = useContext(Context);
   function Login_Screen(props) {
-    return <Login navigation={props.navigation} />;
+    return <Login navigation={props.navigation} Setcontext={(t) => signup({token: t})} />;
   }
   function Signup_Screen(props) {
-    return <Signup navigation={props.navigation} />;
+    return <Signup navigation={props.navigation} Setcontext={(t) => signup({token: t})}  />;
   }
 
   return (

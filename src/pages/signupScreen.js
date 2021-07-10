@@ -16,7 +16,7 @@ import {
   Inter_600SemiBold,
   Inter_400Regular,
 } from "@expo-google-fonts/inter";
-export default function login({ navigation }) {
+export default function login({ navigation, Setcontext }) {
   const [showpassword, setshowpassword] = useState(false);
   const [showpassword2, setshowpassword2] = useState(false);
   const [username, setusername] = useState(null);
@@ -59,6 +59,7 @@ export default function login({ navigation }) {
         .post("/signup", data)
         .then((res) => {
           console.log(res.data);
+          Setcontext(res.data.token);
           setmessage(null);
         })
         .catch((err) => {
@@ -280,16 +281,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     minHeight: 15,
     textAlignVertical: "center",
-    textAlign: "center"
+    textAlign: "center",
   },
 });
 
-
-{/* <Text
+{
+  /* <Text
 style={[
   styles.Helptext,
   { textAlign: "center", marginHorizontal: 40, marginBottom: 20 },
 ]}
 >
 By creating an account you agree to our terms of use and privacy policy
-</Text> */}
+</Text> */
+}
