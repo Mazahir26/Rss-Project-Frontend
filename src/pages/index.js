@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { DefaultTheme } from "react-native-paper";
 import Auth from "./AuthNavigator";
-import Home from "./HomeScreen";
+import Main from "./MainNavigator";
 
 import { Context } from "../Context/AuthContext";
 import { Provider as PaperProvider } from "react-native-paper";
@@ -31,7 +31,7 @@ export default function Index() {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        {state.token ? <Home /> : <Auth />}
+        {state.token ? <Main /> : <Auth />}
       </NavigationContainer>
     </PaperProvider>
   );

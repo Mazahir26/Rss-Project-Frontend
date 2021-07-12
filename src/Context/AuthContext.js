@@ -16,7 +16,6 @@ const authReducer = (state, action) => {
 
 const tryLocalSignin = (dispatch) => async () => {
   let token = await SecureStore.getItemAsync("token");
-  console.log(token);
   if (token) {
     dispatch({ type: "signin", payload: token });
   }else {
@@ -27,7 +26,6 @@ const signup =
   (dispatch) =>
   async ({ token }) => {
     await SecureStore.setItemAsync("token", token);
-    console.log(token);
     dispatch({ type: "signin", payload: token });
   };
 const logout =
