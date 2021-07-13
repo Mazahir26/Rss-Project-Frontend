@@ -5,6 +5,7 @@ import { Context } from "../Context/AuthContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import axios from "../api/api_axios";
 import * as rssParser from "react-native-rss-parser";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -23,6 +24,7 @@ function getParsedFeed(Url) {
     .then((rss) => {
       let data = [];
       const regex = /(<([^>]+)>)/gi;
+      const regex2 = /^\s*$(?:\r\n?|\n)/gm;
       for (let i = 0; i < rss.items.length; i++) {
         const mainimageurl = rss.image.url;
         const author = rss.title;
@@ -30,11 +32,21 @@ function getParsedFeed(Url) {
         const description = rss.items[i].description
           // .substring(0, 50)
           .replace(regex, "");
+        const catagory = rss.items[i].categories[0]
+          ? rss.items[i].categories[0].name == "Uncategorized"
+            ? rss.items[i].title.substring(0, 15)
+            : rss.items[i].categories[0].name
+          : "news";
         const content = rss.items[i].content
-          ? rss.items[i].content.substring(0, 1500).replace(regex, "")
-          : rss.items[i].description.replace(regex, "");
+          ? rss.items[i].content
+              .substring(0, 1500)
+              .replace(regex, "")
+              .replace(regex2, "")
+          : rss.items[i].description.replace(regex, "").replace(regex2, "");
         const url = rss.items[i].id;
-        const imageurl = rss.items[i].imageUrl ? rss.items[i].imageUrl : null;
+        const imageurl = rss.items[i].imageUrl
+          ? rss.items[i].imageUrl
+          : `https://source.unsplash.com/weekly?${catagory}`;
         const date = rss.items[i].published;
         data.push({
           title,
@@ -93,12 +105,12 @@ function getUserFeed(token) {
 }
 
 export default function Main({ navigation }) {
-  const { logout, state } = useContext(Context);
+  const { state } = useContext(Context);
   const [Data, setData] = useState(null);
   const tempfeed = [
     "https://techwiser.com/feed/",
     "https://blog.logrocket.com/rss",
-    "https://gadgets.ndtv.com/rss/feeds",
+    "http://dev.to/rss",
   ];
   useEffect(() => {
     // getUserFeed(state.token).then((res) => {
@@ -118,9 +130,29 @@ export default function Main({ navigation }) {
   }
 
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={home} />
-      <Tab.Screen name="TEST" component={Test1} />
+    <Tab.Navigator tabBarOptions={{ showLabel: false }}>
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),
+        }}
+        name="Home"
+        component={home}
+      />
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="format-list-bulleted"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+        name="TEST"
+        component={Test1}
+      />
     </Tab.Navigator>
   );
 }

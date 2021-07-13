@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme as LightTheme , DarkTheme } from "@react-navigation/native";
 import { DefaultTheme } from "react-native-paper";
 import Auth from "./AuthNavigator";
 import Main from "./MainNavigator";
@@ -16,7 +16,21 @@ const theme = {
   colors: {
     ...DefaultTheme.colors,
     primary: "#2365BB",
-    accent: "#f1c40f",
+    accent: "#F7F7F7",
+    textc: "black",
+    bg: "#eee"
+  },
+};
+const Darktheme = {
+  ...DefaultTheme,
+  dark: true,
+  roundness: 10,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#070C11",
+    accent: "#141414",
+    textc: "#ccc",
+    bg: "#222"
   },
 };
 
@@ -30,7 +44,7 @@ export default function Index() {
   }
   return (
     <PaperProvider theme={theme}>
-      <NavigationContainer>
+      <NavigationContainer theme={LightTheme}>
         {state.token ? <Main /> : <Auth />}
       </NavigationContainer>
     </PaperProvider>
