@@ -27,7 +27,7 @@ const Darktheme = {
   roundness: 10,
   colors: {
     ...DefaultTheme.colors,
-    primary: "#070C11",
+    primary: "#2365BB",
     accent: "#141414",
     textc: "#ccc",
     bg: "#222"
@@ -43,8 +43,8 @@ export default function Index() {
     return <View></View>;
   }
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer theme={LightTheme}>
+    <PaperProvider theme={Darktheme}>
+      <NavigationContainer theme={DarkTheme}>
         {state.token ? <Main /> : <Auth />}
       </NavigationContainer>
     </PaperProvider>

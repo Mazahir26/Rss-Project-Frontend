@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import Home from "./HomeScreen";
+import AllFeed from "./allFeedsScreen";
 import { View, Text } from "react-native";
 import { Context } from "../Context/AuthContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -9,13 +10,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
-function Test1() {
-  return (
-    <View>
-      <Text>TEST</Text>
-    </View>
-  );
-}
 
 function getParsedFeed(Url) {
   return fetch(Url)
@@ -104,9 +98,69 @@ function getUserFeed(token) {
     });
 }
 
+function getUserSavedfeed(token) {
+  if (!token) return null;
+  return axios
+    .get("/saved", {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    })
+    .then((res) => {
+      let data = []
+      for (let index = 0; index < res.data.length; index++) {
+        data.push(res.data[index].url)
+      }
+      return data;
+    })
+    .catch((err) => {
+      if (err.response.data.error) {
+        console.log(err.response.data.error);
+        return null;
+      } else {
+        console.log(err);
+        return null;
+      }
+    });
+}
+
+function getAllFeed(token) {
+  if (!token) return null;
+  return axios
+    .get("/feed")
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      if (err.response.data.error) {
+        console.log(err.response.data.error);
+        return null;
+      } else {
+        console.log(err);
+        return null;
+      }
+    });
+}
 export default function Main({ navigation }) {
   const { state } = useContext(Context);
   const [Data, setData] = useState(null);
+  const [Allfeeds, setAllfeeds] = useState(null);
+
+  const [savedUrls, setSavedUrls] = useState(null);
+  useEffect(()=> {
+    getUserSavedfeed(state.token).then((res) => {
+      if(res != null){
+        setSavedUrls(res)
+      }
+    })
+  },[])
+  useEffect(()=> {
+    getAllFeed().then((res) => {
+      if(res != null){
+        setAllfeeds(res)
+      }
+    })
+  },[])
   const tempfeed = [
     "https://techwiser.com/feed/",
     "https://blog.logrocket.com/rss",
@@ -125,8 +179,35 @@ export default function Main({ navigation }) {
     });
   }, []);
 
+  function saveUrl(url) {
+    if (!state.token) return null;
+    return axios
+      .post("/saved",{
+        url: url,
+      }, {
+        headers: {
+          Authorization: `Token ${state.token}`,
+        },
+      })
+      .then((res) => {
+        return(res.data)
+      })
+      .catch((err) => {
+        if (err.response.data.error) {
+          console.log(err.response.data.error);
+          return null
+        } else {
+          console.log(err);
+          return null
+        }
+      });
+  }
+
   function home() {
-    return <Home data={Data} />;
+    return <Home data={Data} savedUrls={savedUrls} saveUrl={saveUrl} />;
+  }
+  function allfeed() {
+    return <AllFeed data={Allfeeds} />;
   }
 
   return (
@@ -150,8 +231,8 @@ export default function Main({ navigation }) {
             />
           ),
         }}
-        name="TEST"
-        component={Test1}
+        name="allfeed"
+        component={allfeed}
       />
     </Tab.Navigator>
   );

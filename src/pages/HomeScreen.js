@@ -1,15 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import LottieView from "lottie-react-native";
 import Cardfeed from "../components/FeedCard";
 import Constants from "expo-constants";
 import PagerView from "react-native-pager-view";
 import { StatusBar } from "expo-status-bar";
-import axios from "../api/api_axios";
+import { Context } from "../Context/AuthContext";
 
 
-export default function Home({ data }) {
-  if (data == null) {
+export default function Home({ data, savedUrls, saveUrl }) {
+  const { state } = useContext(Context);
+
+  function issaved(url){
+    if(savedUrls.includes(url)){
+      return true
+    }
+    return false
+  }
+  if (data == null || savedUrls == null) {
     return (
       <View
         style={{
@@ -27,6 +35,7 @@ export default function Home({ data }) {
       </View>
     );
   }
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -37,11 +46,14 @@ export default function Home({ data }) {
       >
         {data.map((item, index) => (
           <Cardfeed
+            url={item.url}
             key={index}
             title={item.title}
             content={item.content}
             imageurl={item.imageurl}
             author={item.author}
+            isSaved={issaved(item.url)}
+            Saveurl={saveUrl}
           />
         ))}
       </PagerView>
