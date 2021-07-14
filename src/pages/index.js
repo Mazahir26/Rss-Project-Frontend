@@ -43,8 +43,8 @@ export default function Index() {
     return <View></View>;
   }
   return (
-    <PaperProvider theme={Darktheme}>
-      <NavigationContainer theme={DarkTheme}>
+    <PaperProvider theme={theme}>
+      <NavigationContainer theme={LightTheme}>
         {state.token ? <Main /> : <Auth />}
       </NavigationContainer>
     </PaperProvider>

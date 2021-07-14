@@ -124,8 +124,7 @@ function getUserSavedfeed(token) {
     });
 }
 
-function getAllFeed(token) {
-  if (!token) return null;
+function getAllFeed() {
   return axios
     .get("/feed")
     .then((res) => {
