@@ -7,19 +7,22 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import axios from "../api/api_axios";
 import * as rssParser from "react-native-rss-parser";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import LottieView from "lottie-react-native";
 
 const Tab = createBottomTabNavigator();
-
 
 function getParsedFeed(Url) {
   return fetch(Url)
     .then((response) => response.text())
     .then((responseData) => rssParser.parse(responseData))
     .then((rss) => {
+      let length = 0;
+      if (rss.items.length > 5) length = 5;
+      else length = rss.items.length;
       let data = [];
       const regex = /(<([^>]+)>)/gi;
       const regex2 = /^\s*$(?:\r\n?|\n)/gm;
-      for (let i = 0; i < rss.items.length; i++) {
+      for (let i = 0; i < length; i++) {
         const mainimageurl = rss.image.url;
         const author = rss.title;
         const title = rss.items[i].title;
@@ -68,11 +71,12 @@ function Date_sortFunction(a, b) {
 async function MakeUserfeed(Links) {
   let data = [];
   for (let i = 0; i < Links.length; i++) {
-    const res = await getParsedFeed(Links[i]);
+    const res = await getParsedFeed(Links[i].feed);
     data = data.concat(res);
   }
   // data.splice(0, 10);
   data.sort(Date_sortFunction);
+  console.log(data.length, "Okkkk??? sbh");
   return data;
 }
 
@@ -89,10 +93,10 @@ function getUserFeed(token) {
     })
     .catch((err) => {
       if (err.response.data.error) {
-        console.log(err.response.data.error);
+        console.log(err.response.data.error, "From 93");
         return null;
       } else {
-        console.log(err);
+        console.log(err, "From 96");
         return null;
       }
     });
@@ -107,9 +111,9 @@ function getUserSavedfeed(token) {
       },
     })
     .then((res) => {
-      let data = []
+      let data = [];
       for (let index = 0; index < res.data.length; index++) {
-        data.push(res.data[index].url)
+        data.push(res.data[index].url);
       }
       return data;
     })
@@ -132,10 +136,10 @@ function getAllFeed() {
     })
     .catch((err) => {
       if (err.response.data.error) {
-        console.log(err.response.data.error);
+        console.log(err.response.data.error, "From 136");
         return null;
       } else {
-        console.log(err);
+        console.log(err, "From 139");
         return null;
       }
     });
@@ -144,69 +148,178 @@ export default function Main({ navigation }) {
   const { state } = useContext(Context);
   const [Data, setData] = useState(null);
   const [Allfeeds, setAllfeeds] = useState(null);
-
+  const [userfeed, setuserfeed] = useState(null);
   const [savedUrls, setSavedUrls] = useState(null);
-  useEffect(()=> {
-    getUserSavedfeed(state.token).then((res) => {
-      if(res != null){
-        setSavedUrls(res)
-      }
-    })
-  },[])
-  useEffect(()=> {
-    getAllFeed().then((res) => {
-      if(res != null){
-        setAllfeeds(res)
-      }
-    })
-  },[])
+
+  useEffect(() => {
+    getUserSavedfeed(state.token)
+      .then((res) => {
+        if (res != null) {
+          setSavedUrls(res);
+        }
+      })
+      .catch((err) => console.log(err, "From Line 158"));
+  }, []);
+  useEffect(() => {
+    getAllFeed()
+      .then((res) => {
+        if (res != null) {
+          setAllfeeds(res);
+        }
+      })
+      .catch((err) => console.log(err, "From Line 167"));
+  }, []);
   const tempfeed = [
     "https://techwiser.com/feed/",
     "https://blog.logrocket.com/rss",
     "http://dev.to/rss",
   ];
-  useEffect(() => {
-    // getUserFeed(state.token).then((res) => {
-    //   if (res != null) {
-    //     MakeUserfeed(tempfeed).then((res) => {
-    //       setData(res);
-    //     });
-    //   }
-    // });
-    MakeUserfeed(tempfeed).then((res) => {
-      setData(res);
-    });
-  }, []);
 
+  function refresh() {
+    getUserFeed(state.token)
+      .then((res) => {
+        if (res != null) {
+          setuserfeed(res);
+          MakeUserfeed(res)
+            .then((res) => {
+              setData(res);
+            })
+            .catch((err) => console.log(err));
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+  useEffect(() => {
+    getUserFeed(state.token)
+      .then((res) => {
+        if (res != null) {
+          setuserfeed(res);
+          MakeUserfeed(res)
+            .then((res) => {
+              setData(res);
+            })
+            .catch((err) => console.log(err, "From line 198"));
+        }
+      })
+      .catch((err) => console.log(err, "from line 201"));
+    // MakeUserfeed(tempfeed).then((res) => {
+    //   setData(res);
+    // });
+  }, []);
+  function subscribe(id, ok) {
+    if (id == null) return null;
+    if (!state.token) return null;
+    //if ok is false then unsubscribe
+    if (!ok) {
+      return axios
+        .put(
+          `/feed/${id}/unsubscribe`,
+          {},
+          {
+            headers: {
+              Authorization: `Token ${state.token}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data, "unsubscribe");
+          return res.data;
+        })
+        .catch((err) => {
+          if (err.response.data.error) {
+            console.log(err.response.data.error);
+            return null;
+          } else {
+            console.log(err);
+            return null;
+          }
+        });
+    } else {
+      return axios
+        .put(
+          `/feed/${id}/subscribe`,
+          {},
+          {
+            headers: {
+              Authorization: `Token ${state.token}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data, "subscribe");
+          return res.data;
+        })
+        .catch((err) => {
+          if (err.response.data.error) {
+            console.log(err.response.data.error);
+            return null;
+          } else {
+            console.log(err);
+            return null;
+          }
+        });
+    }
+  }
   function saveUrl(url) {
     if (!state.token) return null;
     return axios
-      .post("/saved",{
-        url: url,
-      }, {
-        headers: {
-          Authorization: `Token ${state.token}`,
+      .post(
+        "/saved",
+        {
+          url: url,
         },
-      })
+        {
+          headers: {
+            Authorization: `Token ${state.token}`,
+          },
+        }
+      )
       .then((res) => {
-        return(res.data)
+        return res.data;
       })
       .catch((err) => {
         if (err.response.data.error) {
           console.log(err.response.data.error);
-          return null
+          return null;
         } else {
           console.log(err);
-          return null
+          return null;
         }
       });
   }
 
   function home() {
-    return <Home data={Data} savedUrls={savedUrls} saveUrl={saveUrl} />;
+    return (
+      <Home
+        data={Data}
+        savedUrls={savedUrls}
+        saveUrl={saveUrl}
+        onRefresh={refresh}
+      />
+    );
   }
   function allfeed() {
-    return <AllFeed data={Allfeeds} />;
+    return (
+      <AllFeed data={Allfeeds} userfeed={userfeed} Subscribe={subscribe} />
+    );
+  }
+  if (Data == null || Allfeeds == null || savedUrls == null) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          marginTop: 40,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <LottieView
+          source={require("../assets/loading.json")}
+          autoPlay
+          loop
+        ></LottieView>
+      </View>
+    );
   }
 
   return (

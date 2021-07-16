@@ -70,7 +70,7 @@ export default function card({
                 }}
               >
                 <MaterialIcons
-                  name="save-alt"
+                  name={Saved? "bookmark" : "bookmark-outline"}
                   size={24}
                   color={Saved ? colors.primary : colors.textc}
                 />

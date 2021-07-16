@@ -1,30 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import LottieView from "lottie-react-native";
 import Cardfeed from "../components/AllfeedCard";
 import Constants from "expo-constants";
 import { Searchbar } from "react-native-paper";
 
-export default function allFeed({ data }) {
+export default function allFeed({ data, userfeed, Subscribe }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [Feeds, setFeeds] = useState(data);
   const onChangeSearch = (query) => setSearchQuery(query);
-  if (data == null) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          marginTop: 40,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <LottieView
-          source={require("../assets/loading.json")}
-          autoPlay
-          loop
-        ></LottieView>
-      </View>
-    );
+  useEffect(() => {
+    //Filter data
+  }, [searchQuery]);
+
+  function sub(url) {
+    for (let i = 0; i < userfeed.length; i++) {
+      if (userfeed[i].feed == url) {
+        return true;
+      }
+    }
+    return false;
   }
   return (
     <View style={styles.container}>
@@ -35,10 +29,18 @@ export default function allFeed({ data }) {
         value={searchQuery}
       />
       <FlatList
-        keyExtractor={({ item, index }) => `${index}`}
-        data={data}
+        keyExtractor={(item, index) => `${index}`}
+        data={Feeds}
         renderItem={({ item, index }) => {
-          return <Cardfeed title={item.name} Url={item.feed} />;
+          return (
+            <Cardfeed
+              title={item.name}
+              Url={item.feed}
+              isSubscribed={sub(item.feed)}
+              Subscribe={Subscribe}
+              id={item.id}
+            />
+          );
         }}
       />
     </View>

@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import LottieView from "lottie-react-native";
 import Cardfeed from "../components/FeedCard";
 import Constants from "expo-constants";
 import PagerView from "react-native-pager-view";
@@ -8,8 +7,9 @@ import { StatusBar } from "expo-status-bar";
 import { Context } from "../Context/AuthContext";
 
 
-export default function Home({ data, savedUrls, saveUrl }) {
+export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
   const { state } = useContext(Context);
+ const {page, setpag} = useState(0)
 
   function issaved(url){
     if(savedUrls.includes(url)){
@@ -17,29 +17,13 @@ export default function Home({ data, savedUrls, saveUrl }) {
     }
     return false
   }
-  if (data == null || savedUrls == null) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          marginTop: 40,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <LottieView
-          source={require("../assets/loading.json")}
-          autoPlay
-          loop
-        ></LottieView>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <PagerView
+        onPageSelected={(e) => {
+          // console.log(e)
+        }}
         style={styles.viewPager}
         initialPage={0}
         orientation="vertical"
