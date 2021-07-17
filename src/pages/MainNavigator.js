@@ -74,9 +74,7 @@ async function MakeUserfeed(Links) {
     const res = await getParsedFeed(Links[i].feed);
     data = data.concat(res);
   }
-  // data.splice(0, 10);
   data.sort(Date_sortFunction);
-  console.log(data.length, "Okkkk??? sbh");
   return data;
 }
 
@@ -222,7 +220,6 @@ export default function Main({ navigation }) {
           }
         )
         .then((res) => {
-          console.log(res.data, "unsubscribe");
           return res.data;
         })
         .catch((err) => {
@@ -246,7 +243,6 @@ export default function Main({ navigation }) {
           }
         )
         .then((res) => {
-          console.log(res.data, "subscribe");
           return res.data;
         })
         .catch((err) => {

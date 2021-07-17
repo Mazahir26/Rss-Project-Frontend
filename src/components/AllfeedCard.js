@@ -5,17 +5,7 @@ import { useTheme } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 
 export default function feedcard({ title, Url, isSubscribed, Subscribe, id }) {
-  // useEffect(() => {
-  //   for (let i = 0; i < userfeed.length; i++) {
-  //     console.log(userfeed[i].feed, "===", Url);
-  //     if (userfeed[i].feed == Url) {
-  //       setSubscribed(true);
-  //       return;
-  //     } else {
-  //       setSubscribed(false);
-  //     }
-  //   }
-  // }, []);
+
   const [Subscribed, setSubscribed] = useState(isSubscribed);
 
   const { colors } = useTheme();

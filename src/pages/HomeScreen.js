@@ -1,28 +1,28 @@
-import React, { useState, useContext, useEffect } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import React, { useState, useContext, useRef } from "react";
+import { StyleSheet, Animated, View, FlatList } from "react-native";
 import Cardfeed from "../components/FeedCard";
 import Constants from "expo-constants";
 import PagerView from "react-native-pager-view";
 import { StatusBar } from "expo-status-bar";
 import { Context } from "../Context/AuthContext";
 
-
 export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
   const { state } = useContext(Context);
- const {page, setpag} = useState(0)
+  const { page, setpag } = useState(0);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  function issaved(url){
-    if(savedUrls.includes(url)){
-      return true
+  function issaved(url) {
+    if (savedUrls.includes(url)) {
+      return true;
     }
-    return false
+    return false;
   }
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <PagerView
         onPageSelected={(e) => {
-          // console.log(e)
+          console.log(e.nativeEvent.position);
         }}
         style={styles.viewPager}
         initialPage={0}
@@ -41,6 +41,9 @@ export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
           />
         ))}
       </PagerView>
+      <View
+        style={{ position: "absolute", borderWidth: 3, height: 30, width: 30 }}
+      ></View>
     </View>
   );
 }
