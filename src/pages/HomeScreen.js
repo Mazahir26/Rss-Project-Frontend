@@ -1,15 +1,33 @@
 import React, { useState, useContext, useRef } from "react";
-import { StyleSheet, Animated, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList } from "react-native";
+import * as Animatable from "react-native-animatable";
 import Cardfeed from "../components/FeedCard";
 import Constants from "expo-constants";
 import PagerView from "react-native-pager-view";
+import { IconButton } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { Context } from "../Context/AuthContext";
 
 export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
   const { state } = useContext(Context);
-  const { page, setpag } = useState(0);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [page, setPage] = useState(0);
+  const [button, setbutton] = useState(false);
+
+  if (data.length == 0) {
+    return (
+      <View style={styles.container}>
+        <IconButton
+          icon="refresh"
+          color="#2365BB"
+          size={30}
+          style={{ backgroundColor: "white" }}
+          onPress={() => {
+            onRefresh();
+          }}
+        />
+      </View>
+    );
+  }
 
   function issaved(url) {
     if (savedUrls.includes(url)) {
@@ -22,7 +40,13 @@ export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
       <StatusBar style="light" />
       <PagerView
         onPageSelected={(e) => {
-          console.log(e.nativeEvent.position);
+          if (e.nativeEvent.position < page) {
+            setbutton(true);
+            setTimeout(() => (button ? setbutton(false) : null), 2500);
+          } else {
+            setbutton(false);
+          }
+          setPage(e.nativeEvent.position);
         }}
         style={styles.viewPager}
         initialPage={0}
@@ -41,9 +65,39 @@ export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
           />
         ))}
       </PagerView>
-      <View
-        style={{ position: "absolute", borderWidth: 3, height: 30, width: 30 }}
-      ></View>
+      {button ? (
+        <Animatable.View
+          style={{ position: "absolute", top: 20 }}
+          animation="fadeInDown"
+          duration={300}
+        >
+          <IconButton
+            icon="refresh"
+            color="#2365BB"
+            size={24}
+            style={{ backgroundColor: "white" }}
+            onPress={() => {
+              setbutton(false);
+              onRefresh();
+            }}
+          />
+        </Animatable.View>
+      ) : (
+        <Animatable.View
+          style={{ position: "absolute", top: 20 }}
+          animation="fadeOutUp"
+          duration={300}
+        >
+          <IconButton
+            elevation={4}
+            disabled={true}
+            icon="refresh"
+            color="#2365BB"
+            size={24}
+            style={{ backgroundColor: "white" }}
+          />
+        </Animatable.View>
+      )}
     </View>
   );
 }

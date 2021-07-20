@@ -9,7 +9,18 @@ export default function allFeed({ data, userfeed, Subscribe }) {
   const [Feeds, setFeeds] = useState(data);
   const onChangeSearch = (query) => setSearchQuery(query);
   useEffect(() => {
-    //Filter data
+    if (!Feeds) return;
+    let temdata = [];
+    data.map((item, index) => {
+      let t = item.feed.toLowerCase();
+      let l = item.name.toLowerCase();
+      if (t.includes(searchQuery.toLowerCase()) > 0) {
+        temdata.push(item);
+      } else if (l.includes(searchQuery.toLowerCase()) > 0) {
+        temdata.push(item);
+      }
+    });
+    setFeeds(temdata);
   }, [searchQuery]);
 
   function sub(url) {
