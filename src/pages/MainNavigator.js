@@ -296,7 +296,7 @@ export default function Main({ navigation }) {
   }
   function allfeed() {
     return (
-      <AllFeed data={Allfeeds} userfeed={userfeed} Subscribe={subscribe} />
+      <AllFeed data={Allfeeds} userfeed={userfeed} Subscribe={subscribe} parseurl={getParsedFeed} />
     );
   }
   if (Data == null || Allfeeds == null || savedUrls == null) {
