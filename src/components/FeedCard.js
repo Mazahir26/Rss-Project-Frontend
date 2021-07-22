@@ -52,8 +52,11 @@ export default function card({
               marginTop: 15,
             }}
           >
-            <Paragraph style={{ fontWeight: "bold", color: colors.textc }}>
-              {author}
+            <Paragraph
+              numberOfLines={1}
+              style={{ fontWeight: "bold", color: colors.textc }}
+            >
+              {author.substring(0, 25) + (author.length > 25 ? "..." : "")}
             </Paragraph>
             <View
               style={{
@@ -70,7 +73,7 @@ export default function card({
                 }}
               >
                 <MaterialIcons
-                  name={Saved? "bookmark" : "bookmark-outline"}
+                  name={Saved ? "bookmark" : "bookmark-outline"}
                   size={24}
                   color={Saved ? colors.primary : colors.textc}
                 />

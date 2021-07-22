@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { StyleSheet, View, FlatList } from "react-native";
 import * as Animatable from "react-native-animatable";
 import Cardfeed from "../components/FeedCard";
@@ -28,6 +28,15 @@ export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
       </View>
     );
   }
+  useEffect(() => {
+    if (button == true) {
+      setTimeout(() => {
+        if (button == true) {
+          setbutton(false);
+        }
+      }, 2500);
+    }
+  }, [button]);
 
   function issaved(url) {
     if (savedUrls.includes(url)) {
@@ -41,8 +50,7 @@ export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
       <PagerView
         onPageSelected={(e) => {
           if (e.nativeEvent.position < page) {
-            setbutton(true);
-            setTimeout(() => (button ? setbutton(false) : null), 2500);
+            if (button != true) setbutton(true);
           } else {
             setbutton(false);
           }
@@ -69,7 +77,8 @@ export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
         <Animatable.View
           style={{ position: "absolute", top: 20 }}
           animation="fadeInDown"
-          duration={300}
+          duration={150}
+          delay={0}
         >
           <IconButton
             icon="refresh"
@@ -86,7 +95,8 @@ export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
         <Animatable.View
           style={{ position: "absolute", top: 20 }}
           animation="fadeOutUp"
-          duration={300}
+          duration={150}
+          delay={0}
         >
           <IconButton
             elevation={4}
