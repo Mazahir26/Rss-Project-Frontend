@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import Home from "./HomeScreen";
 import AllFeed from "./allFeedsScreen";
+import Profile from "./ProfileScreen";
 import { View, Text } from "react-native";
 import { Context } from "../Context/AuthContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -294,9 +295,21 @@ export default function Main({ navigation }) {
       />
     );
   }
+  function profile() {
+    return (
+      <Profile
+        savedUrls={savedUrls}
+      />
+    );
+  }
   function allfeed() {
     return (
-      <AllFeed data={Allfeeds} userfeed={userfeed} Subscribe={subscribe} parseurl={getParsedFeed} />
+      <AllFeed
+        data={Allfeeds}
+        userfeed={userfeed}
+        Subscribe={subscribe}
+        parseurl={getParsedFeed}
+      />
     );
   }
   if (Data == null || Allfeeds == null || savedUrls == null) {
@@ -319,16 +332,7 @@ export default function Main({ navigation }) {
   }
 
   return (
-    <Tab.Navigator tabBarOptions={{ showLabel: false }}>
-      <Tab.Screen
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
-          ),
-        }}
-        name="Home"
-        component={home}
-      />
+    <Tab.Navigator initialRouteName="Home" tabBarOptions={{ showLabel: false }}>
       <Tab.Screen
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -341,6 +345,24 @@ export default function Main({ navigation }) {
         }}
         name="allfeed"
         component={allfeed}
+      />
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),
+        }}
+        name="Home"
+        component={home}
+      />
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account" color={color} size={size} />
+          ),
+        }}
+        name="Profile"
+        component={profile}
       />
     </Tab.Navigator>
   );
