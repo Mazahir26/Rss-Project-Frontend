@@ -4,31 +4,33 @@ import Constants from "expo-constants";
 import { useTheme } from "react-native-paper";
 import { Context } from "../Context/AuthContext";
 import { Card, Title, Paragraph } from "react-native-paper";
-import { Feather } from '@expo/vector-icons'; 
-
-
-import {
-  useFonts,
-  Inter_600SemiBold,
-  Inter_400Regular,
-} from "@expo-google-fonts/inter";
+import { Feather } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 const Stack = createNativeStackNavigator();
 
 export default function profile({ savedUrls }) {
-  const { state, logout } = useContext(Context);
-  let [fontsLoaded] = useFonts({
-    Inter_600SemiBold,
-    Inter_400Regular,
-  });
+  const { state, toggledarktheme, logout } = useContext(Context);
+  const [loading, setloading] = useState(true);
   const { colors } = useTheme();
+  useEffect(() => {
+    setloading(false);
+  }, []);
   function profile() {
     return (
       <View style={styles.container}>
         <Text style={[styles.heading, { color: colors.textc }]}>
           My Profile
         </Text>
-        <Card style={{ backgroundColor: colors.accent }}>
+        <Card
+          onPress={() => {
+            if (loading == true) return;
+            setloading(true);
+            if (state.darktheme == "false") {
+              toggledarktheme({ theme: "true" });
+            } else toggledarktheme({ theme: "false" });
+          }}
+          style={{ backgroundColor: colors.accent }}
+        >
           <View
             style={{
               flexDirection: "row",
@@ -69,7 +71,6 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 35,
-    fontFamily: "Inter_600SemiBold",
     marginLeft: 10,
     marginBottom: 55,
   },

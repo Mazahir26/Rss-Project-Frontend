@@ -4,11 +4,17 @@ import * as SecureStore from "expo-secure-store";
 const authReducer = (state, action) => {
   switch (action.type) {
     case "signin":
-      return { token: action.payload, onBoarded: true };
+      return {
+        token: action.payload.token,
+        onBoarded: true,
+        darktheme: action.payload.darktheme,
+      };
     case "signout":
       return { token: null, onBoarded: true };
     case "OnBoarded":
       return { ...state, onBoarded: true };
+    case "toggledarktheme":
+      return { ...state, darktheme: action.payload };
     default:
       return state;
   }
@@ -17,8 +23,13 @@ const authReducer = (state, action) => {
 const tryLocalSignin = (dispatch) => async () => {
   let token = await SecureStore.getItemAsync("token");
   if (token) {
-    dispatch({ type: "signin", payload: token });
-  }else {
+    let darktheme = await SecureStore.getItemAsync("darktheme");
+    if (darktheme) {
+      dispatch({ type: "signin", payload: { token, darktheme } });
+    } else {
+      dispatch({ type: "signin", payload: { token, darktheme: "true" } });
+    }
+  } else {
     dispatch({ type: "signout" });
   }
 };
@@ -37,8 +48,14 @@ const logout =
 const OnBoarded = (dispatch) => () => {
   dispatch({ type: "OnBoarded" });
 };
+const toggledarktheme =
+  (dispatch) =>
+  async ({ theme }) => {
+    await SecureStore.setItemAsync("darktheme", theme);
+    dispatch({ type: "toggledarktheme", payload: theme });
+  };
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { OnBoarded, logout, signup, tryLocalSignin },
-  { token: "", onBoarded: null }
+  { OnBoarded, logout, signup, tryLocalSignin, toggledarktheme },
+  { token: "", onBoarded: null, darktheme: "true" }
 );
