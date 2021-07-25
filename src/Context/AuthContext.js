@@ -37,7 +37,7 @@ const signup =
   (dispatch) =>
   async ({ token }) => {
     await SecureStore.setItemAsync("token", token);
-    dispatch({ type: "signin", payload: token });
+    dispatch({ type: "signin", payload: { token, darktheme: "false" } });
   };
 const logout =
   (dispatch) =>
