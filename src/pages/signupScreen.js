@@ -208,7 +208,6 @@ export default function login({ navigation, Setcontext }) {
           </Text>
         </TouchableRipple>
       </View>
-
       <TouchableOpacity
         onPress={() => navigation.navigate("Login")}
         style={{ flex: 0.05, alignItems: "center" }}

@@ -9,6 +9,7 @@ import axios from "../api/api_axios";
 import * as rssParser from "react-native-rss-parser";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
+import { useTheme } from "react-native-paper";
 
 const Tab = createBottomTabNavigator();
 
@@ -145,6 +146,7 @@ function getAllFeed() {
 }
 export default function Main({ navigation }) {
   const { state } = useContext(Context);
+  const { colors } = useTheme();
   const [Data, setData] = useState(null);
   const [Allfeeds, setAllfeeds] = useState(null);
   const [userfeed, setuserfeed] = useState(null);
@@ -296,11 +298,7 @@ export default function Main({ navigation }) {
     );
   }
   function profile() {
-    return (
-      <Profile
-        savedUrls={savedUrls}
-      />
-    );
+    return <Profile savedUrls={savedUrls} />;
   }
   function allfeed() {
     return (
@@ -320,6 +318,7 @@ export default function Main({ navigation }) {
           marginTop: 40,
           justifyContent: "center",
           alignItems: "center",
+          backgroundColor: colors.accent,
         }}
       >
         <LottieView
