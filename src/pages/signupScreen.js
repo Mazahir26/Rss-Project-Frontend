@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TextInput,
   Text,
+  Image,
 } from "react-native";
 import { TouchableRipple } from "react-native-paper";
 
@@ -77,13 +78,19 @@ export default function login({ navigation, Setcontext }) {
   }
   return (
     <LinearGradient
-      colors={["#005EB6", "#002D5A"]}
-      start={[0, 0]}
-      end={[1, 1]}
+      colors={["#8275c7", "#628cd4"]}
+      start={[1, 1]}
+      end={[0, 0]}
       style={styles.container}
     >
       <View style={styles.Headdingcontainer}>
-        <Text style={styles.heading}>Get on Board!</Text>
+        <Image
+          style={{ height: "70%", width: "70%" }}
+          resizeMode="contain"
+          source={require("../assets/signup.png")}
+        />
+        <Text style={[styles.heading, { fontSize: 20 }]}>Hi There!</Text>
+        <Text style={styles.heading}>Let's Get Started</Text>
       </View>
       <View style={styles.middle_container}>
         <View style={styles.textinput_container}>
@@ -108,7 +115,7 @@ export default function login({ navigation, Setcontext }) {
         <View style={styles.textinput_container}>
           <MaterialCommunityIcons
             style={{ marginRight: 8 }}
-            name="lock"
+            name="key"
             size={24}
             color={message ? "#FF7F7F" : "white"}
           />
@@ -149,7 +156,7 @@ export default function login({ navigation, Setcontext }) {
         <View style={styles.textinput_container}>
           <MaterialCommunityIcons
             style={{ marginRight: 8 }}
-            name="lock"
+            name="key"
             size={24}
             color={message ? "#FF7F7F" : "white"}
           />
@@ -231,7 +238,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
   },
   bottomContainer: {
-    flex: 0.3,
+    flex: 0.2,
     marginHorizontal: 25,
     justifyContent: "flex-start",
     alignItems: "center",
@@ -245,12 +252,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   Headdingcontainer: {
-    flex: 0.35,
-    marginHorizontal: 25,
+    flex: 0.45,
     justifyContent: "center",
+    alignItems: "center",
   },
   heading: {
-    fontSize: 40,
+    fontSize: 32,
     color: "white",
     fontFamily: "Inter_600SemiBold",
   },

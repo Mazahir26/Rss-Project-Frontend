@@ -50,8 +50,7 @@ export default function Index() {
       <NavigationContainer
         theme={state.darktheme == "true" ? DarkTheme : LightTheme}
       >
-        {/* {state.token ? <Main /> : <Auth />} */}
-        <Auth />
+        {state.token ? <Main /> : <Auth />}
       </NavigationContainer>
     </PaperProvider>
   );
