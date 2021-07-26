@@ -82,9 +82,9 @@ export default function login({ navigation, Setcontext }) {
     >
       <View style={styles.Headdingcontainer}>
         <Image
-          // style={{ height: "65%", width: "65%" }}
+          style={{ height: "70%", width: "70%" }}
           resizeMode="contain"
-          source={require('../assets/login.svg')}
+          source={require("../assets/login.png")}
         />
         <Text style={[styles.heading, { fontSize: 20 }]}>Welcome Back!</Text>
         <Text style={styles.heading}>Please, Login</Text>
@@ -112,7 +112,7 @@ export default function login({ navigation, Setcontext }) {
         <View style={styles.textinput_container}>
           <MaterialCommunityIcons
             style={{ marginRight: 8 }}
-            name="lock"
+            name="key"
             size={24}
             color={message ? "#FF7F7F" : "white"}
           />
