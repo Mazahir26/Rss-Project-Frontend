@@ -131,7 +131,7 @@ export default function profile({ savedUrls }) {
               onPress={() => {
                 setabexpand(!abexpand);
               }}
-              name={abexpand ? "chevron-down" : "chevron-right"}
+              name={abexpand ? "chevron-down" : "users"}
               size={27}
               color={colors.textc}
             />
@@ -177,7 +177,7 @@ export default function profile({ savedUrls }) {
               onPress={() => {
                 setppexpand(!ppexpand);
               }}
-              name={ppexpand ? "chevron-down" : "chevron-right"}
+              name={ppexpand ? "chevron-down" : "database"}
               size={27}
               color={colors.textc}
             />

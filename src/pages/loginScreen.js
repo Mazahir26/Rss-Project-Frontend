@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TextInput,
   Text,
+  Image,
 } from "react-native";
 import { TouchableRipple } from "react-native-paper";
 
@@ -53,7 +54,6 @@ export default function login({ navigation, Setcontext }) {
       axios
         .post("/login", data)
         .then((res) => {
-          console.log(res.data.token,"  ========bchsbh");
           Setcontext(res.data.token);
           setmessage(null);
         })
@@ -75,13 +75,19 @@ export default function login({ navigation, Setcontext }) {
   }
   return (
     <LinearGradient
-      colors={["#005EB6", "#002D5A"]}
+      colors={["#8275c7", "#8f85cc"]}
       start={[0.9, 0.9]}
       end={[0, 0]}
       style={styles.container}
     >
       <View style={styles.Headdingcontainer}>
-        <Text style={styles.heading}>Hello there, welcome back</Text>
+        <Image
+          // style={{ height: "65%", width: "65%" }}
+          resizeMode="contain"
+          source={require('../assets/login.svg')}
+        />
+        <Text style={[styles.heading, { fontSize: 20 }]}>Welcome Back!</Text>
+        <Text style={styles.heading}>Please, Login</Text>
       </View>
       <View style={styles.middle_container}>
         <View style={styles.textinput_container}>
@@ -187,7 +193,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
   },
   bottomContainer: {
-    flex: 0.3,
+    flex: 0.25,
     marginHorizontal: 25,
     justifyContent: "flex-start",
     alignItems: "center",
@@ -201,12 +207,12 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   Headdingcontainer: {
-    flex: 0.35,
-    marginHorizontal: 25,
+    flex: 0.45,
     justifyContent: "center",
+    alignItems: "center",
   },
   heading: {
-    fontSize: 40,
+    fontSize: 32,
     color: "white",
     fontFamily: "Inter_600SemiBold",
   },
@@ -219,7 +225,7 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
   },
   middle_container: {
-    flex: 0.3,
+    flex: 0.25,
     marginHorizontal: 25,
     justifyContent: "flex-end",
   },
