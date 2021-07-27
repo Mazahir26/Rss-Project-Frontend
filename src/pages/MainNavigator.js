@@ -10,6 +10,7 @@ import * as rssParser from "react-native-rss-parser";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
 import { useTheme } from "react-native-paper";
+import { StatusBar } from "expo-status-bar";
 
 const Tab = createBottomTabNavigator();
 
@@ -312,57 +313,70 @@ export default function Main({ navigation }) {
   }
   if (Data == null || Allfeeds == null || savedUrls == null) {
     return (
-      <View
-        style={{
-          flex: 1,
-          marginTop: 40,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: colors.accent,
-        }}
-      >
-        <LottieView
-          source={require("../assets/loading.json")}
-          autoPlay
-          loop
-        ></LottieView>
-      </View>
+      <>
+        <StatusBar style={state.darktheme == "true" ? "light" : "dark"} />
+        <View
+          style={{
+            flex: 1,
+            marginTop: 40,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: colors.accent,
+          }}
+        >
+          <LottieView
+            source={require("../assets/loading.json")}
+            autoPlay
+            loop
+          ></LottieView>
+        </View>
+      </>
     );
   }
 
   return (
-    <Tab.Navigator initialRouteName="Home" tabBarOptions={{ showLabel: false }}>
-      <Tab.Screen
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="format-list-bulleted"
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-        name="allfeed"
-        component={allfeed}
-      />
-      <Tab.Screen
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
-          ),
-        }}
-        name="Home"
-        component={home}
-      />
-      <Tab.Screen
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" color={color} size={size} />
-          ),
-        }}
-        name="Profile"
-        component={profile}
-      />
-    </Tab.Navigator>
+    <>
+      <StatusBar style={state.darktheme == "true" ? "light" : "dark"} />
+      <Tab.Navigator
+        initialRouteName="Home"
+        tabBarOptions={{ showLabel: false }}
+      >
+        <Tab.Screen
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="format-list-bulleted"
+                color={color}
+                size={size}
+              />
+            ),
+          }}
+          name="allfeed"
+          component={allfeed}
+        />
+        <Tab.Screen
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="home" color={color} size={size} />
+            ),
+          }}
+          name="Home"
+          component={home}
+        />
+        <Tab.Screen
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="account"
+                color={color}
+                size={size}
+              />
+            ),
+          }}
+          name="Profile"
+          component={profile}
+        />
+      </Tab.Navigator>
+    </>
   );
 }

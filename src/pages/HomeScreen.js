@@ -5,7 +5,6 @@ import Cardfeed from "../components/FeedCard";
 import Constants from "expo-constants";
 import PagerView from "react-native-pager-view";
 import { IconButton } from "react-native-paper";
-import { StatusBar } from "expo-status-bar";
 import { Context } from "../Context/AuthContext";
 
 export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
@@ -46,7 +45,6 @@ export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
   }
   return (
     <View style={styles.container}>
-      <StatusBar style="light" />
       <PagerView
         onPageSelected={(e) => {
           if (e.nativeEvent.position < page) {

@@ -13,6 +13,8 @@ export default function feedcard({
   onPress,
 }) {
   const [Subscribed, setSubscribed] = useState(isSubscribed);
+  const [loading, setloading] = useState(false);
+
   const { colors } = useTheme();
   return (
     <View>
@@ -34,14 +36,24 @@ export default function feedcard({
               alignItems: "center",
               justifyContent: "center",
             }}
+            disabled={loading}
             onPress={() => {
+              setloading(true);
               if (Subscribed) {
-                Subscribe(id, false)
-                  .then((res) => setSubscribed(false))
+                Subscribe(id, false);
+                setloading(true);
+                setloading(true)
+                  .then((res) => {
+                    setloading(false);
+                    setSubscribed(false);
+                  })
                   .catch((err) => console.log(err));
               } else {
                 Subscribe(id, true)
-                  .then((res) => setSubscribed(true))
+                  .then((res) => {
+                    setloading(false);
+                    setSubscribed(true);
+                  })
                   .catch((err) => console.log(err));
               }
             }}
