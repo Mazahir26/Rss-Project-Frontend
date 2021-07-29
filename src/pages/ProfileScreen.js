@@ -6,6 +6,7 @@ import {
   FlatList,
   ScrollView,
   Share,
+  RefreshControl,
 } from "react-native";
 import Constants from "expo-constants";
 import { useTheme } from "react-native-paper";
@@ -13,10 +14,14 @@ import { Context } from "../Context/AuthContext";
 import { Card, Title, Paragraph, ActivityIndicator } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
+import { Context as Main } from "../Context/MainDataContext";
+
 const Stack = createNativeStackNavigator();
 
-export default function profile({ savedUrls }) {
+export default function profile() {
   const { state, toggledarktheme, logout } = useContext(Context);
+  const MainC = useContext(Main);
+
   const [loading, setloading] = useState(true);
   const [ppexpand, setppexpand] = useState(false);
   const [abexpand, setabexpand] = useState(false);
@@ -110,6 +115,9 @@ export default function profile({ savedUrls }) {
             marginBottom: 20,
             marginHorizontal: 8,
           }}
+          onPress={() => {
+            setabexpand(!abexpand);
+          }}
         >
           <View
             style={{
@@ -155,6 +163,9 @@ export default function profile({ savedUrls }) {
             backgroundColor: colors.accent,
             marginBottom: 20,
             marginHorizontal: 8,
+          }}
+          onPress={() => {
+            setppexpand(!ppexpand);
           }}
         >
           <View
@@ -226,6 +237,10 @@ export default function profile({ savedUrls }) {
     );
   }
   function Saved({ navigation }) {
+    const [Refreshing, setRefreshing] = useState(false);
+    useEffect(() => {
+      setRefreshing(false);
+    }, []);
     const onShare = async (url) => {
       try {
         const result = await Share.share({
@@ -241,12 +256,25 @@ export default function profile({ savedUrls }) {
           // dismissed
         }
       } catch (error) {
+        Savedloading;
         console.log(error.message);
       }
     };
+    if (MainC.state.SavedFeeds == null) {
+      return (
+        <View style={styles.loadingcontainer}>
+          <ActivityIndicator size={45} animating={true} color="#2365BB" />
+        </View>
+      );
+    }
     return (
       <View>
         <FlatList
+          onRefresh={() => {
+            MainC.savedFeeds({ token: state.token });
+            setRefreshing(true);
+          }}
+          refreshing={Refreshing}
           ListHeaderComponent={() => (
             <Text
               style={{
@@ -259,12 +287,11 @@ export default function profile({ savedUrls }) {
               Saved Feeds
             </Text>
           )}
-          data={savedUrls}
-          keyExtractor={(item) => item}
+          data={MainC.state.SavedFeeds}
+          keyExtractor={(item) => item.url}
           renderItem={({ item, index }) => {
             return (
               <Card
-                onPress={() => onShare(item)}
                 elevation={6}
                 style={{
                   backgroundColor: colors.accent,
@@ -280,10 +307,41 @@ export default function profile({ savedUrls }) {
                     alignItems: "center",
                   }}
                 >
-                  <Title numberOfLines={1} style={{ color: colors.textc }}>
-                    {item.length > 25 ? item.substring(0, 25) + "..." : item}
+                  <Title
+                    numberOfLines={1}
+                    style={{ fontSize: 18, color: colors.textc }}
+                  >
+                    {item.url.length > 25
+                      ? item.url.substring(0, 25) + "..."
+                      : item.url}
                   </Title>
-                  <Feather name="share" size={22} color={colors.textc} />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Feather
+                      onPress={() => (Refreshing ? {} : onShare(item.url))}
+                      name="share-2"
+                      size={22}
+                      style={{ marginHorizontal: 6 }}
+                      color={colors.textc}
+                    />
+                    <Feather
+                      onPress={() => {
+                        if (Refreshing) return;
+                        MainC.delete_URL({ token: state.token, id: item.id });
+                        setRefreshing(true);
+                        MainC.savedFeeds({ token: state.token });
+                      }}
+                      name="delete"
+                      size={24}
+                      style={{ marginHorizontal: 6 }}
+                      color={colors.textc}
+                    />
+                  </View>
                 </View>
               </Card>
             );

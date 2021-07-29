@@ -132,40 +132,7 @@ export default function Main({ navigation }) {
         });
     }
   }
-  function saveUrl(url) {
-    if (!state.token) return null;
-    return axios
-      .post(
-        "/saved",
-        {
-          url: url,
-        },
-        {
-          headers: {
-            Authorization: `Token ${state.token}`,
-          },
-        }
-      )
-      .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        if (err.response.data.error) {
-          console.log(err.response.data.error);
-          return null;
-        } else {
-          console.log(err);
-          return null;
-        }
-      });
-  }
 
-  function home() {
-    return <Home saveUrl={saveUrl} />;
-  }
-  function profile() {
-    return <Profile savedUrls={MainC.state.SavedFeeds} />;
-  }
   function allfeed() {
     return <AllFeed Subscribe={subscribe} parseurl={getParsedFeed} />;
   }
@@ -223,7 +190,7 @@ export default function Main({ navigation }) {
             ),
           }}
           name="Home"
-          component={home}
+          component={Home}
         />
         <Tab.Screen
           options={{
@@ -236,7 +203,7 @@ export default function Main({ navigation }) {
             ),
           }}
           name="Profile"
-          component={profile}
+          component={Profile}
         />
       </Tab.Navigator>
     </>

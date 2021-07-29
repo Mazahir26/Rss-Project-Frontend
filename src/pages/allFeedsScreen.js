@@ -11,9 +11,12 @@ import { Context as Auth } from "../Context/AuthContext";
 
 const Stack = createNativeStackNavigator();
 
-export default function allFeed({ Subscribe, parseurl }) {
+export default function allFeed({ parseurl }) {
   const { colors } = useTheme();
-  const { state } = useContext(Context);
+  const { state, SubscribeFeed, UnSubscribeFeed, allFeeds } =
+    useContext(Context);
+  const auth = useContext(Auth);
+
   function feed({ navigation, route }) {
     return (
       <SingleFeed navigation={navigation} route={route} parseurl={parseurl} />
@@ -31,7 +34,18 @@ export default function allFeed({ Subscribe, parseurl }) {
   function allfeed({ navigation }) {
     const [searchQuery, setSearchQuery] = useState("");
     const [Feeds, setFeeds] = useState(state.AllFeeds);
+    const [Refreshing, setRefreshing] = useState(false);
+    useEffect(() => {
+      setRefreshing(false);
+    }, []);
     const onChangeSearch = (query) => setSearchQuery(query);
+    function cSubscribe(id, t) {
+      if (t) {
+        SubscribeFeed({ token: auth.state.token, id: id });
+      } else {
+        UnSubscribeFeed({ token: auth.state.token, id: id });
+      }
+    }
     useEffect(() => {
       if (!Feeds) return;
       let temdata = [];
@@ -58,6 +72,11 @@ export default function allFeed({ Subscribe, parseurl }) {
           value={searchQuery}
         />
         <FlatList
+          onRefresh={() => {
+            allFeeds();
+            setRefreshing(true);
+          }}
+          refreshing={Refreshing}
           keyExtractor={(item, index) => `${index}`}
           data={Feeds}
           renderItem={({ item, index }) => {
@@ -66,7 +85,7 @@ export default function allFeed({ Subscribe, parseurl }) {
                 title={item.name}
                 Url={item.feed}
                 isSubscribed={sub(item.feed)}
-                Subscribe={Subscribe}
+                Subscribe={cSubscribe}
                 id={item.id}
                 onPress={() => navigation.navigate("feed", item)}
               />

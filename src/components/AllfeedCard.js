@@ -41,21 +41,11 @@ export default function feedcard({
               setloading(true);
               if (Subscribed) {
                 Subscribe(id, false);
-                setloading(true);
-                setloading(true)
-                  .then((res) => {
-                    setloading(false);
-                    setSubscribed(false);
-                  })
-                  .catch((err) => console.log(err));
               } else {
-                Subscribe(id, true)
-                  .then((res) => {
-                    setloading(false);
-                    setSubscribed(true);
-                  })
-                  .catch((err) => console.log(err));
+                Subscribe(id, true);
               }
+              setSubscribed(!Subscribed);
+              setloading(false);
             }}
           >
             <MaterialIcons

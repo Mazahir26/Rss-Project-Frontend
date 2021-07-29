@@ -6,25 +6,27 @@ import {
   getUserSavedfeed,
   saveUrl,
   deleteUrl,
+  Subscribe,
+  UnSubscribe,
 } from "../components/HelperFun";
 
 const DataReducer = (state, action) => {
   switch (action.type) {
     case "get_user_feed":
-      console.log("Ok at 14")
+      console.log("Ok at 14");
       return {
         ...state,
         UserFeed: action.payload.data,
         UserLinks: action.payload.ufeed,
       };
     case "get_all_feed":
-      console.log("Ok at 20")
+      console.log("Ok at 20");
       return {
         ...state,
         AllFeeds: action.payload,
       };
     case "get_saved_feed":
-      console.log("Ok at 27")
+      console.log("Ok at 27");
       return {
         ...state,
         SavedFeeds: action.payload,
@@ -51,7 +53,7 @@ const DataReducer = (state, action) => {
         UserFeed: [],
         UserLinks: [],
         AllFeeds: [],
-        SavedFeeds: []
+        SavedFeeds: [],
       };
     default:
       return state;
@@ -96,14 +98,10 @@ const save_URL =
   (dispatch) =>
   async ({ token, url }) => {
     const ufeed = await saveUrl(url, token);
+    console.log("Context 99");
     if (ufeed == null) {
+      console.log("Context 101");
       dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
-      return;
-    } else {
-      dispatch({
-        type: "save_url",
-        payload: { id: ufeed.id, url: ufeed.url },
-      });
     }
   };
 
@@ -113,18 +111,38 @@ const delete_URL =
     const ufeed = await deleteUrl(id, token);
     if (ufeed == null) {
       dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
-      return;
-    } else {
-      dispatch({
-        type: "delete_url",
-        payload: ufeed.id,
-      });
+    }
+  };
+
+const SubscribeFeed =
+  (dispatch) =>
+  async ({ token, id }) => {
+    const ufeed = await Subscribe(id, token);
+    if (ufeed == null) {
+      dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
+    }
+  };
+
+const UnSubscribeFeed =
+  (dispatch) =>
+  async ({ token, id }) => {
+    const ufeed = await UnSubscribe(id, token);
+    if (ufeed == null) {
+      dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
     }
   };
 
 export const { Provider, Context } = createDataContext(
   DataReducer,
-  { userFeed, allFeeds, savedFeeds, save_URL, delete_URL },
+  {
+    userFeed,
+    allFeeds,
+    savedFeeds,
+    save_URL,
+    delete_URL,
+    SubscribeFeed,
+    UnSubscribeFeed,
+  },
   {
     UserLinks: null,
     UserFeed: null,

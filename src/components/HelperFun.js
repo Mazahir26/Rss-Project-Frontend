@@ -30,7 +30,7 @@ export function getParsedFeed(Url, num = 5) {
               .replace(regex, "")
               .replace(regex2, "")
           : rss.items[i].description.replace(regex, "").replace(regex2, "");
-        const url = rss.items[i].id;
+        const url = rss.items[i].links[0].url;
         const imageurl = rss.items[i].imageUrl
           ? rss.items[i].imageUrl
           : `https://source.unsplash.com/weekly?${catagory}`;
@@ -67,10 +67,8 @@ export function getUserFeed(token) {
     })
     .catch((err) => {
       if (err.response.data.error) {
-        console.log("Eroor huaa");
         return null;
       } else {
-        console.log("Eroor huaa");
         return null;
       }
     });
@@ -168,7 +166,7 @@ export function deleteUrl(id, token) {
       {},
       {
         headers: {
-          Authorization: `Token ${state.token}`,
+          Authorization: `Token ${token}`,
         },
       }
     )
@@ -182,4 +180,63 @@ export function deleteUrl(id, token) {
         return null;
       }
     });
+}
+export function UnSubscribe(id, token) {
+  if (!token) return null;
+  return axios
+    .put(
+      `/feed/${id}/unsubscribe`,
+      {},
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }
+    )
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      if (err.response.data.error) {
+        return null;
+      } else {
+        return null;
+      }
+    });
+}
+export function Subscribe(id, token) {
+  if (!token) return null;
+  return axios
+    .put(
+      `/feed/${id}/subscribe`,
+      {},
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }
+    )
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      if (err.response.data.error) {
+        return null;
+      } else {
+        return null;
+      }
+    });
+}
+
+function validURL(str) {
+  var pattern = new RegExp(
+    "^(https?:\\/\\/)?" + // protocol
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+      "(\\#[-a-z\\d_]*)?$",
+    "i"
+  ); // fragment locator
+  return !!pattern.test(str);
 }

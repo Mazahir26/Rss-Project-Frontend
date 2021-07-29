@@ -8,10 +8,9 @@ import { IconButton } from "react-native-paper";
 import { Context } from "../Context/MainDataContext";
 import { Context as Auth } from "../Context/AuthContext";
 
-export default function Home({ saveUrl }) {
+export default function Home() {
   const { state, userFeed, save_URL, delete_URL } = useContext(Context);
   const auth = useContext(Auth);
-
   const [page, setPage] = useState(0);
   const [button, setbutton] = useState(false);
 
@@ -66,7 +65,8 @@ export default function Home({ saveUrl }) {
     return r;
   }
   function SaveUrl(url, isSaved) {
-    if (isSaved) {
+    if (!isSaved) {
+      console.log("here we are");
       save_URL({
         token: auth.state.token,
         url: url,
@@ -74,6 +74,7 @@ export default function Home({ saveUrl }) {
     } else {
       state.SavedFeeds.map((item, index) => {
         if (item.url == url) {
+          console.log("line 78");
           delete_URL({
             id: item.id,
             token: auth.state.token,
@@ -91,7 +92,7 @@ export default function Home({ saveUrl }) {
           if (e.nativeEvent.position < page) {
             if (button != true) setbutton(true);
           } else {
-            setbutton(false);
+            if (button == true) setbutton(false);
           }
           setPage(e.nativeEvent.position);
         }}
