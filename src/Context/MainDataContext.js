@@ -11,17 +11,20 @@ import {
 const DataReducer = (state, action) => {
   switch (action.type) {
     case "get_user_feed":
+      console.log("Ok at 14")
       return {
         ...state,
         UserFeed: action.payload.data,
         UserLinks: action.payload.ufeed,
       };
     case "get_all_feed":
+      console.log("Ok at 20")
       return {
         ...state,
         AllFeeds: action.payload,
       };
     case "get_saved_feed":
+      console.log("Ok at 27")
       return {
         ...state,
         SavedFeeds: action.payload,
@@ -48,6 +51,7 @@ const DataReducer = (state, action) => {
         UserFeed: [],
         UserLinks: [],
         AllFeeds: [],
+        SavedFeeds: []
       };
     default:
       return state;

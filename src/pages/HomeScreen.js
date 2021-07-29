@@ -9,7 +9,7 @@ import { Context } from "../Context/MainDataContext";
 import { Context as Auth } from "../Context/AuthContext";
 
 export default function Home({ saveUrl }) {
-  const { state, userFeed } = useContext(Context);
+  const { state, userFeed, save_URL, delete_URL } = useContext(Context);
   const auth = useContext(Auth);
 
   const [page, setPage] = useState(0);
@@ -61,10 +61,27 @@ export default function Home({ saveUrl }) {
     state.SavedFeeds.map((item, index) => {
       if (item.url == url) {
         r = true;
-        break;
       }
     });
-      return r;
+    return r;
+  }
+  function SaveUrl(url, isSaved) {
+    if (isSaved) {
+      save_URL({
+        token: auth.state.token,
+        url: url,
+      });
+    } else {
+      state.SavedFeeds.map((item, index) => {
+        if (item.url == url) {
+          delete_URL({
+            id: item.id,
+            token: auth.state.token,
+          });
+          return;
+        }
+      });
+    }
   }
 
   return (
@@ -91,7 +108,7 @@ export default function Home({ saveUrl }) {
             imageurl={item.imageurl}
             author={item.author}
             isSaved={issaved(item.url)}
-            Saveurl={saveUrl}
+            Saveurl={SaveUrl}
           />
         ))}
       </PagerView>

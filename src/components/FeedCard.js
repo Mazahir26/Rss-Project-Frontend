@@ -67,9 +67,11 @@ export default function card({
               <TouchableOpacity
                 style={{ marginHorizontal: 7, margin: 5 }}
                 onPress={() => {
-                  Saveurl(url).then((res) => {
-                    setSaved(true);
-                  });
+                  // Saveurl(url).then((res) => {
+                  //   setSaved(true);
+                  // });
+                  Saveurl(url, Saved);
+                  setSaved(!Saved);
                 }}
               >
                 <MaterialIcons

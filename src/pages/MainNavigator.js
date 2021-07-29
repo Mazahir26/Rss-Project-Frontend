@@ -171,8 +171,8 @@ export default function Main({ navigation }) {
   }
   if (
     MainC.state.UserFeed == null ||
-    MainC.state.AllFeed == null ||
-    savedUrls == null
+    MainC.state.AllFeeds == null ||
+    MainC.state.SavedFeeds == null
   ) {
     return (
       <>
