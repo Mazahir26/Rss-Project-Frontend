@@ -1,18 +1,21 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, View, FlatList } from "react-native";
 import * as Animatable from "react-native-animatable";
 import Cardfeed from "../components/FeedCard";
 import Constants from "expo-constants";
 import PagerView from "react-native-pager-view";
 import { IconButton } from "react-native-paper";
-import { Context } from "../Context/AuthContext";
+import { Context } from "../Context/MainDataContext";
+import { Context as Auth } from "../Context/AuthContext";
 
-export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
-  const { state } = useContext(Context);
+export default function Home({ saveUrl }) {
+  const { state, userFeed } = useContext(Context);
+  const auth = useContext(Auth);
+
   const [page, setPage] = useState(0);
   const [button, setbutton] = useState(false);
 
-  if (data.length == 0) {
+  if (state.UserFeed.length == 0) {
     return (
       <View style={styles.container}>
         <IconButton
@@ -21,28 +24,49 @@ export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
           size={30}
           style={{ backgroundColor: "white" }}
           onPress={() => {
-            onRefresh();
+            userFeed({ token: auth.state.token });
           }}
         />
       </View>
     );
   }
-  useEffect(() => {
-    if (button == true) {
-      setTimeout(() => {
-        if (button == true) {
-          setbutton(false);
-        }
-      }, 2500);
-    }
-  }, [button]);
-
+  Refreshbutton = () => {
+    setTimeout(() => {
+      if (button == true) {
+        setbutton(false);
+      }
+    }, 2500);
+    return (
+      <Animatable.View
+        style={{ position: "absolute", top: 20 }}
+        animation="fadeInDown"
+        duration={150}
+        delay={0}
+      >
+        <IconButton
+          icon="refresh"
+          color="#2365BB"
+          size={24}
+          style={{ backgroundColor: "white" }}
+          onPress={() => {
+            setbutton(false);
+            userFeed({ token: auth.state.token });
+          }}
+        />
+      </Animatable.View>
+    );
+  };
   function issaved(url) {
-    if (savedUrls.includes(url)) {
-      return true;
-    }
-    return false;
+    let r = false;
+    state.SavedFeeds.map((item, index) => {
+      if (item.url == url) {
+        r = true;
+        break;
+      }
+    });
+      return r;
   }
+
   return (
     <View style={styles.container}>
       <PagerView
@@ -58,7 +82,7 @@ export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
         initialPage={0}
         orientation="vertical"
       >
-        {data.map((item, index) => (
+        {state.UserFeed.map((item, index) => (
           <Cardfeed
             url={item.url}
             key={index}
@@ -72,23 +96,7 @@ export default function Home({ data, savedUrls, saveUrl, onRefresh }) {
         ))}
       </PagerView>
       {button ? (
-        <Animatable.View
-          style={{ position: "absolute", top: 20 }}
-          animation="fadeInDown"
-          duration={150}
-          delay={0}
-        >
-          <IconButton
-            icon="refresh"
-            color="#2365BB"
-            size={24}
-            style={{ backgroundColor: "white" }}
-            onPress={() => {
-              setbutton(false);
-              onRefresh();
-            }}
-          />
-        </Animatable.View>
+        <Refreshbutton />
       ) : (
         <Animatable.View
           style={{ position: "absolute", top: 20 }}

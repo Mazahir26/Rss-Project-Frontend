@@ -4,6 +4,7 @@ import AllFeed from "./allFeedsScreen";
 import Profile from "./ProfileScreen";
 import { View, Text } from "react-native";
 import { Context } from "../Context/AuthContext";
+import { Context as DataContext } from "../Context/MainDataContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import axios from "../api/api_axios";
 import * as rssParser from "react-native-rss-parser";
@@ -66,148 +67,19 @@ function getParsedFeed(Url) {
       return [];
     });
 }
-function Date_sortFunction(a, b) {
-  var dateA = new Date(a.date).getTime();
-  var dateB = new Date(b.date).getTime();
-  return dateA < dateB ? 1 : -1;
-}
-async function MakeUserfeed(Links) {
-  let data = [];
-  for (let i = 0; i < Links.length; i++) {
-    const res = await getParsedFeed(Links[i].feed);
-    data = data.concat(res);
-  }
-  data.sort(Date_sortFunction);
-  return data;
-}
 
-function getUserFeed(token) {
-  if (!token) return null;
-  return axios
-    .get("/userfeed", {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    })
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      if (err.response.data.error) {
-        console.log(err.response.data.error, "From 93");
-        return null;
-      } else {
-        console.log(err, "From 96");
-        return null;
-      }
-    });
-}
-
-function getUserSavedfeed(token) {
-  if (!token) return null;
-  return axios
-    .get("/saved", {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    })
-    .then((res) => {
-      let data = [];
-      for (let index = 0; index < res.data.length; index++) {
-        data.push(res.data[index].url);
-      }
-      return data;
-    })
-    .catch((err) => {
-      if (err.response.data.error) {
-        console.log(err.response.data.error);
-        return null;
-      } else {
-        console.log(err);
-        return null;
-      }
-    });
-}
-
-function getAllFeed() {
-  return axios
-    .get("/feed")
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      if (err.response.data.error) {
-        console.log(err.response.data.error, "From 136");
-        return null;
-      } else {
-        console.log(err, "From 139");
-        return null;
-      }
-    });
-}
 export default function Main({ navigation }) {
   const { state } = useContext(Context);
+  const MainC = useContext(DataContext);
   const { colors } = useTheme();
-  const [Data, setData] = useState(null);
-  const [Allfeeds, setAllfeeds] = useState(null);
-  const [userfeed, setuserfeed] = useState(null);
-  const [savedUrls, setSavedUrls] = useState(null);
 
+  //makeuserfeed
   useEffect(() => {
-    getUserSavedfeed(state.token)
-      .then((res) => {
-        if (res != null) {
-          setSavedUrls(res);
-        }
-      })
-      .catch((err) => console.log(err, "From Line 158"));
+    MainC.userFeed({ token: state.token });
+    MainC.savedFeeds({ token: state.token });
+    MainC.allFeeds();
   }, []);
-  useEffect(() => {
-    getAllFeed()
-      .then((res) => {
-        if (res != null) {
-          setAllfeeds(res);
-        }
-      })
-      .catch((err) => console.log(err, "From Line 167"));
-  }, []);
-  const tempfeed = [
-    "https://techwiser.com/feed/",
-    "https://blog.logrocket.com/rss",
-    "http://dev.to/rss",
-  ];
 
-  function refresh() {
-    getUserFeed(state.token)
-      .then((res) => {
-        if (res != null) {
-          setuserfeed(res);
-          MakeUserfeed(res)
-            .then((res) => {
-              setData(res);
-            })
-            .catch((err) => console.log(err));
-        }
-      })
-      .catch((err) => console.log(err));
-  }
-  useEffect(() => {
-    getUserFeed(state.token)
-      .then((res) => {
-        if (res != null) {
-          setuserfeed(res);
-          MakeUserfeed(res)
-            .then((res) => {
-              setData(res);
-            })
-            .catch((err) => console.log(err, "From line 198"));
-        }
-      })
-      .catch((err) => console.log(err, "from line 201"));
-    // MakeUserfeed(tempfeed).then((res) => {
-    //   setData(res);
-    // });
-  }, []);
   function subscribe(id, ok) {
     if (id == null) return null;
     if (!state.token) return null;
@@ -289,32 +161,22 @@ export default function Main({ navigation }) {
   }
 
   function home() {
-    return (
-      <Home
-        data={Data}
-        savedUrls={savedUrls}
-        saveUrl={saveUrl}
-        onRefresh={refresh}
-      />
-    );
+    return <Home saveUrl={saveUrl} />;
   }
   function profile() {
-    return <Profile savedUrls={savedUrls} />;
+    return <Profile savedUrls={MainC.state.SavedFeeds} />;
   }
   function allfeed() {
-    return (
-      <AllFeed
-        data={Allfeeds}
-        userfeed={userfeed}
-        Subscribe={subscribe}
-        parseurl={getParsedFeed}
-      />
-    );
+    return <AllFeed Subscribe={subscribe} parseurl={getParsedFeed} />;
   }
-  if (Data == null || Allfeeds == null || savedUrls == null) {
+  if (
+    MainC.state.UserFeed == null ||
+    MainC.state.AllFeed == null ||
+    savedUrls == null
+  ) {
     return (
       <>
-        <StatusBar style={state.darktheme == "true" ? "light" : "dark"} />
+        <StatusBar style="auto" />
         <View
           style={{
             flex: 1,
