@@ -234,7 +234,6 @@ export default function profile() {
               marginHorizontal: 8,
             }}
             onPress={() => {
-              setloading(true);
               logout(state.token);
             }}
           >

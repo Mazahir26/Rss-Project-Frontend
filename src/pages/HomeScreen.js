@@ -14,6 +14,15 @@ export default function Home() {
   const [page, setPage] = useState(0);
   const [button, setbutton] = useState(false);
 
+  useEffect(() => {
+    if (button == true) {
+      setTimeout(() => {
+        if (button == true) {
+          setbutton(false);
+        }
+      }, 2500);
+    }
+  }, [button]);
   if (state.UserFeed.length == 0) {
     return (
       <View style={styles.container}>
@@ -21,7 +30,9 @@ export default function Home() {
           icon="refresh"
           color="#2365BB"
           size={30}
-          style={{ backgroundColor: "white" }}
+          style={{
+            backgroundColor: auth.state.darktheme == "true" ? "#141414" : "white",
+          }}
           onPress={() => {
             userFeed({ token: auth.state.token });
           }}
@@ -30,11 +41,7 @@ export default function Home() {
     );
   }
   Refreshbutton = () => {
-    setTimeout(() => {
-      if (button == true) {
-        setbutton(false);
-      }
-    }, 2500);
+    console.log("ok?");
     return (
       <Animatable.View
         style={{ position: "absolute", top: 20 }}
@@ -66,7 +73,6 @@ export default function Home() {
   }
   function SaveUrl(url, isSaved) {
     if (!isSaved) {
-      console.log("here we are");
       save_URL({
         token: auth.state.token,
         url: url,
@@ -74,7 +80,6 @@ export default function Home() {
     } else {
       state.SavedFeeds.map((item, index) => {
         if (item.url == url) {
-          console.log("line 78");
           delete_URL({
             id: item.id,
             token: auth.state.token,
@@ -90,7 +95,9 @@ export default function Home() {
       <PagerView
         onPageSelected={(e) => {
           if (e.nativeEvent.position < page) {
-            if (button != true) setbutton(true);
+            if (button != true) {
+              setbutton(true);
+            }
           } else {
             if (button == true) setbutton(false);
           }
@@ -113,9 +120,7 @@ export default function Home() {
           />
         ))}
       </PagerView>
-      {button ? (
-        <Refreshbutton />
-      ) : (
+      {!button ? (
         <Animatable.View
           style={{ position: "absolute", top: 20 }}
           animation="fadeOutUp"
@@ -128,7 +133,31 @@ export default function Home() {
             icon="refresh"
             color="#2365BB"
             size={24}
-            style={{ backgroundColor: "white" }}
+            style={{
+              backgroundColor:
+                auth.state.darktheme == "true" ? "#141414" : "white",
+            }}
+          />
+        </Animatable.View>
+      ) : (
+        <Animatable.View
+          style={{ position: "absolute", top: 20 }}
+          animation="fadeInDown"
+          duration={150}
+          delay={0}
+        >
+          <IconButton
+            icon="refresh"
+            color="#2365BB"
+            size={24}
+            style={{
+              backgroundColor:
+                auth.state.darktheme == "true" ? "#141414" : "white",
+            }}
+            onPress={() => {
+              setbutton(false);
+              userFeed({ token: auth.state.token });
+            }}
           />
         </Animatable.View>
       )}

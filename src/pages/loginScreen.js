@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -6,9 +6,10 @@ import {
   TextInput,
   Text,
   Image,
+  Keyboard,
 } from "react-native";
 import { TouchableRipple } from "react-native-paper";
-
+import * as Animatable from "react-native-animatable";
 import axios from "../api/api_axios";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -22,6 +23,20 @@ export default function login({ navigation, Setcontext }) {
   const [username, setusername] = useState("Tester");
   const [password, setpassword] = useState("Mazahir@123");
   const [message, setmessage] = useState(null);
+
+  useEffect(() => {
+    Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
+    Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+
+    return () => {
+      Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
+      Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
+    };
+  }, []);
+
+  const [keyboardStatus, setKeyboardStatus] = useState(false);
+  const _keyboardDidShow = () => setKeyboardStatus(true);
+  const _keyboardDidHide = () => setKeyboardStatus(false);
 
   let [fontsLoaded] = useFonts({
     Inter_600SemiBold,
@@ -81,15 +96,31 @@ export default function login({ navigation, Setcontext }) {
       style={styles.container}
     >
       <View style={styles.Headdingcontainer}>
-        <Image
-          style={{ height: "70%", width: "70%" }}
-          resizeMode="contain"
-          source={require("../assets/login.png")}
-        />
-        <Text style={[styles.heading, { fontSize: 20 }]}>Welcome Back!</Text>
-        <Text style={styles.heading}>Please, Login</Text>
+        {!keyboardStatus ? (
+          <Animatable.Image
+            delay={200}
+            animation="fadeInDown"
+            style={{ height: "70%", width: "70%" }}
+            resizeMode="contain"
+            source={require("../assets/login.png")}
+          />
+        ) : null}
+        <Animatable.Text
+          animation="slideInDown"
+          delay={100}
+          style={[styles.heading, { fontSize: 20 }]}
+        >
+          Welcome Back!
+        </Animatable.Text>
+        <Animatable.Text animation="slideInDown" style={styles.heading}>
+          Please, Login
+        </Animatable.Text>
       </View>
-      <View style={styles.middle_container}>
+      <Animatable.View
+        animation="slideInUp"
+        delay={100}
+        style={styles.middle_container}
+      >
         <View style={styles.textinput_container}>
           <MaterialCommunityIcons
             style={{ marginRight: 8 }}
@@ -150,9 +181,17 @@ export default function login({ navigation, Setcontext }) {
             ) : null}
           </View>
         </View>
-        <Text style={styles.Helptext}>{message}</Text>
-      </View>
-      <View style={styles.bottomContainer}>
+        {message == "" || message == null ? null : (
+          <Animatable.Text animation="jello" style={styles.Helptext}>
+            {message}
+          </Animatable.Text>
+        )}
+      </Animatable.View>
+      <Animatable.View
+        animation="slideInUp"
+        delay={200}
+        style={styles.bottomContainer}
+      >
         <TouchableRipple
           disabled={message == "" ? true : false}
           rippleColor="#eeee"
@@ -163,21 +202,25 @@ export default function login({ navigation, Setcontext }) {
             {message != "" ? "Login" : "Loading"}
           </Text>
         </TouchableRipple>
-      </View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Signup")}
-        style={{ flex: 0.05, alignItems: "center" }}
-      >
-        <Text
-          style={{
-            fontSize: 13,
-            color: "white",
-            fontFamily: "Inter_400Regular",
-          }}
+      </Animatable.View>
+      {!keyboardStatus ? (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Signup")}
+          style={{ flex: 0.05, alignItems: "center" }}
         >
-          New here? Sign Up instead
-        </Text>
-      </TouchableOpacity>
+          <Animatable.View animation="slideInUp" delay={300}>
+            <Text
+              style={{
+                fontSize: 13,
+                color: "white",
+                fontFamily: "Inter_400Regular",
+              }}
+            >
+              New here? Sign Up instead
+            </Text>
+          </Animatable.View>
+        </TouchableOpacity>
+      ) : null}
     </LinearGradient>
   );
 }
@@ -193,7 +236,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
   },
   bottomContainer: {
-    flex: 0.25,
+    flex: 0.1,
     marginHorizontal: 25,
     justifyContent: "flex-start",
     alignItems: "center",
@@ -207,7 +250,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   Headdingcontainer: {
-    flex: 0.45,
+    flex: 0.4,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -225,7 +268,7 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
   },
   middle_container: {
-    flex: 0.25,
+    flex: 0.45,
     marginHorizontal: 25,
     justifyContent: "flex-end",
   },
