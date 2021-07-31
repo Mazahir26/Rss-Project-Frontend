@@ -8,6 +8,7 @@ import {
   deleteUrl,
   Subscribe,
   UnSubscribe,
+  AddFeed,
 } from "../components/HelperFun";
 
 const DataReducer = (state, action) => {
@@ -35,6 +36,11 @@ const DataReducer = (state, action) => {
       return {
         ...state,
         SavedFeeds: [...state.SavedFeeds, action.payload],
+      };
+    case "update_allfeeds":
+      return {
+        ...state,
+        AllFeeds: [...state.AllFeeds, action.payload],
       };
     case "delete_url":
       const temp = state.SavedFeeds.map((item, index) => {
@@ -70,6 +76,24 @@ const userFeed =
     }
     const data = await MakeUserfeed(ufeed);
     dispatch({ type: "get_user_feed", payload: { data, ufeed } });
+  };
+
+const userFeed =
+  (dispatch) =>
+  async ({ token, url, name }) => {
+    const ufeed = await AddFeed(name, url, token);
+    if (ufeed == "du") {
+      dispatch({
+        type: "setmessage",
+        payload: "Oops! This feed already exists",
+      });
+      return;
+    }
+    if (ufeed == null) {
+      dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
+      return;
+    }
+    dispatch({ type: "update_allfeeds", payload: ufeed });
   };
 
 const allFeeds = (dispatch) => async () => {

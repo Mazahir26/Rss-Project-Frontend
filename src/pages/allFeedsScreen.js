@@ -2,12 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import Cardfeed from "../components/AllfeedCard";
 import Constants from "expo-constants";
-import { Searchbar } from "react-native-paper";
+import { Searchbar, FAB } from "react-native-paper";
 import SingleFeed from "./SingleFeedPage";
+import CreateFeed from "./CreateFeed";
 import { useTheme } from "react-native-paper";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import { Context } from "../Context/MainDataContext";
 import { Context as Auth } from "../Context/AuthContext";
+import * as Animatable from "react-native-animatable";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +37,8 @@ export default function allFeed({ parseurl }) {
     const [searchQuery, setSearchQuery] = useState("");
     const [Feeds, setFeeds] = useState(state.AllFeeds);
     const [Refreshing, setRefreshing] = useState(false);
+    const [fabexpanded, setfabexpanded] = useState(false);
+
     useEffect(() => {
       setRefreshing(false);
     }, []);
@@ -81,16 +85,26 @@ export default function allFeed({ parseurl }) {
           data={Feeds}
           renderItem={({ item, index }) => {
             return (
-              <Cardfeed
-                title={item.name}
-                Url={item.feed}
-                isSubscribed={sub(item.feed)}
-                Subscribe={cSubscribe}
-                id={item.id}
-                onPress={() => navigation.navigate("feed", item)}
-              />
+              <Animatable.View animation="fadeInLeftBig" delay={50 * index}>
+                <Cardfeed
+                  title={item.name}
+                  Url={item.feed}
+                  isSubscribed={sub(item.feed)}
+                  Subscribe={cSubscribe}
+                  id={item.id}
+                  onPress={() => navigation.navigate("feed", item)}
+                />
+              </Animatable.View>
             );
           }}
+        />
+        <FAB
+          style={styles.fab}
+          label={fabexpanded ? "Add Feed" : null}
+          icon="playlist-plus"
+          onPress={() => navigation.navigate("CreateFeed")}
+          onLongPress={() => setfabexpanded(!fabexpanded)}
+          color={colors.primary}
         />
       </View>
     );
@@ -114,6 +128,17 @@ export default function allFeed({ parseurl }) {
         name="feed"
         component={feed}
       />
+      <Stack.Screen
+        options={{
+          title: "Create Feed",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+        }}
+        name="CreateFeed"
+        component={CreateFeed}
+      />
     </Stack.Navigator>
   );
 }
@@ -122,5 +147,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: (Constants.statusBarHeight || 15) + 5,
+  },
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 });

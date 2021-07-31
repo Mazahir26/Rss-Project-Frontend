@@ -204,6 +204,38 @@ export function UnSubscribe(id, token) {
       }
     });
 }
+export function AddFeed(name, feed, token) {
+  if (!token) return null;
+  return axios
+    .post(
+      "/feed",
+      {
+        name: name,
+        feed: feed,
+      },
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }
+    )
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      if (err.response.data) {
+        if (err.response.data.name) {
+          return "du";
+        }
+        if (err.response.data.feed) {
+          return "du";
+        }
+      } else {
+        return null;
+      }
+    });
+}
+
 export function Subscribe(id, token) {
   if (!token) return null;
   return axios
