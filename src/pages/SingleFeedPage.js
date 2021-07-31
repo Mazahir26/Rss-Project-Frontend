@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Image, Text, View, FlatList } from "react-native";
-import { Card, Title, Paragraph } from "react-native-paper";
+import { Text, View, FlatList } from "react-native";
+import { Card, Paragraph } from "react-native-paper";
 import { useTheme } from "react-native-paper";
-
+import Loader from "../components/Loading";
 export default function feed({ navigation, route, parseurl }) {
   const { colors } = useTheme();
   const [data, setData] = useState(null);
@@ -12,9 +12,12 @@ export default function feed({ navigation, route, parseurl }) {
       .catch((err) => console.log(err));
   }, []);
   // console.log(route.params);
+
   return (
     <View style={{ flex: 1 }}>
-      {data == null ? null : (
+      {data == null ? (
+        <Loader />
+      ) : (
         <FlatList
           // styles={{
           // }}

@@ -6,233 +6,251 @@ import {
   FlatList,
   ScrollView,
   Share,
-  RefreshControl,
 } from "react-native";
+import * as Animatable from "react-native-animatable";
 import Constants from "expo-constants";
 import { useTheme } from "react-native-paper";
 import { Context } from "../Context/AuthContext";
-import { Card, Title, Paragraph, ActivityIndicator } from "react-native-paper";
+import { Card, Title, Paragraph } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import { Context as Main } from "../Context/MainDataContext";
-
+import Loader from "../components/Loading";
 const Stack = createNativeStackNavigator();
 
 export default function profile() {
   const { state, toggledarktheme, logout } = useContext(Context);
   const MainC = useContext(Main);
-
-  const [loading, setloading] = useState(true);
-  const [ppexpand, setppexpand] = useState(false);
-  const [abexpand, setabexpand] = useState(false);
+  const [loading, setloading] = useState(false);
 
   const { colors } = useTheme();
-  useEffect(() => {
-    setloading(false);
-  }, []);
+
   function profile({ navigation }) {
+    const [ppexpand, setppexpand] = useState(false);
+    const [abexpand, setabexpand] = useState(false);
     if (loading) {
-      return (
-        <View style={styles.loadingcontainer}>
-          <ActivityIndicator size={45} animating={true} color="#2365BB" />
-        </View>
-      );
+      return <Loader />;
     }
     function navi() {
       navigation.navigate("Saved");
     }
     return (
       <ScrollView style={styles.container}>
-        <Text style={[styles.heading, { color: colors.textc }]}>
+        <Animatable.Text
+          animation="fadeIn"
+          style={[styles.heading, { color: colors.textc }]}
+        >
           My Profile
-        </Text>
-        <Card
-          elevation={6}
-          onPress={() => {
-            if (loading == true) return;
-            setloading(true);
-            if (state.darktheme == "false") {
-              toggledarktheme({ theme: "true" });
-            } else toggledarktheme({ theme: "false" });
-          }}
-          style={{
-            backgroundColor: colors.accent,
-            marginBottom: 20,
-            marginHorizontal: 8,
-          }}
-        >
-          <View
+        </Animatable.Text>
+        <Animatable.View animation="slideInRight">
+          <Card
+            elevation={6}
+            onPress={() => {
+              if (loading == true) return;
+              setloading(true);
+              if (state.darktheme == "false") {
+                toggledarktheme({ theme: "true" }).then(() =>
+                  setloading(false)
+                );
+              } else {
+                toggledarktheme({ theme: "false" }).then(() =>
+                  setloading(false)
+                );
+              }
+            }}
             style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              margin: 15,
-              alignItems: "center",
+              backgroundColor: colors.accent,
+              marginBottom: 20,
+              marginHorizontal: 8,
             }}
           >
-            <View>
-              <Title style={{ color: colors.textc }}>Theme</Title>
-              <Paragraph style={{ color: colors.textc }}>
-                Change the look and feel
-              </Paragraph>
-            </View>
-            <Feather
-              name={state.darktheme == "true" ? "sun" : "moon"}
-              size={27}
-              color={colors.textc}
-            />
-          </View>
-        </Card>
-        <Card
-          elevation={6}
-          style={{
-            backgroundColor: colors.accent,
-            marginBottom: 20,
-            marginHorizontal: 8,
-          }}
-          onPress={navi}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              margin: 15,
-              alignItems: "center",
-            }}
-          >
-            <View>
-              <Title style={{ color: colors.textc }}>Saved</Title>
-              <Paragraph style={{ color: colors.textc }}>
-                Tap to check them out
-              </Paragraph>
-            </View>
-            <Feather name="chevron-right" size={27} color={colors.textc} />
-          </View>
-        </Card>
-        <Card
-          elevation={6}
-          style={{
-            backgroundColor: colors.accent,
-            marginBottom: 20,
-            marginHorizontal: 8,
-          }}
-          onPress={() => {
-            setabexpand(!abexpand);
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              margin: 15,
-              alignItems: "center",
-            }}
-          >
-            <View>
-              <Title style={{ color: colors.textc }}>About Us</Title>
-              {!abexpand ? (
-                <Paragraph style={{ color: colors.textc }}>
-                  Tap to expand
-                </Paragraph>
-              ) : null}
-            </View>
-            <Feather
-              onPress={() => {
-                setabexpand(!abexpand);
-              }}
-              name={abexpand ? "chevron-up" : "users"}
-              size={27}
-              color={colors.textc}
-            />
-          </View>
-          {abexpand ? (
             <View
               style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
                 margin: 15,
                 alignItems: "center",
               }}
             >
-              <Paragraph style={{ color: colors.textc }}>
-                Helljcdbsvshvjbsdjvdvsdvn sd vjhsdvsdvhsd v dsv sd vsdhvhdbs
-              </Paragraph>
-            </View>
-          ) : null}
-        </Card>
-        <Card
-          elevation={6}
-          style={{
-            backgroundColor: colors.accent,
-            marginBottom: 20,
-            marginHorizontal: 8,
-          }}
-          onPress={() => {
-            setppexpand(!ppexpand);
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              margin: 15,
-              alignItems: "center",
-            }}
-          >
-            <View>
-              <Title style={{ color: colors.textc }}>Privacy policy</Title>
-              {!ppexpand ? (
+              <View>
+                <Title style={{ color: colors.textc }}>Theme</Title>
                 <Paragraph style={{ color: colors.textc }}>
-                  Tap to expand
+                  Change the look and feel
                 </Paragraph>
-              ) : null}
+              </View>
+              <Feather
+                name={state.darktheme == "true" ? "sun" : "moon"}
+                size={27}
+                color={colors.textc}
+              />
             </View>
-            <Feather
-              onPress={() => {
-                setppexpand(!ppexpand);
-              }}
-              name={ppexpand ? "chevron-up" : "file-text"}
-              size={27}
-              color={colors.textc}
-            />
-          </View>
-          {ppexpand ? (
+          </Card>
+        </Animatable.View>
+        <Animatable.View delay={100} animation="slideInRight">
+          <Card
+            elevation={6}
+            style={{
+              backgroundColor: colors.accent,
+              marginBottom: 20,
+              marginHorizontal: 8,
+            }}
+            onPress={navi}
+          >
             <View
               style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
                 margin: 15,
                 alignItems: "center",
               }}
             >
-              <Paragraph style={{ color: colors.textc }}>
-                We don't know what to say here, but it looks cool.{"\n"}
-                Anyways about your data, we are broke and can't afford to store
-                your data unless its necessary. so yeah we respect your privacy
-                :)
-              </Paragraph>
+              <View>
+                <Title style={{ color: colors.textc }}>Saved</Title>
+                <Paragraph style={{ color: colors.textc }}>
+                  Tap to check them out
+                </Paragraph>
+              </View>
+              <Feather name="chevron-right" size={27} color={colors.textc} />
             </View>
-          ) : null}
-        </Card>
-        <Card
-          elevation={6}
-          style={{
-            backgroundColor: colors.accent,
-            marginBottom: 20,
-            marginHorizontal: 8,
-          }}
-          onPress={() => {
-            setloading(true);
-            logout(state.token);
-          }}
-        >
-          <View
+          </Card>
+        </Animatable.View>
+        <Animatable.View delay={200} animation="slideInRight">
+          <Card
+            elevation={6}
             style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              margin: 15,
-              alignItems: "center",
+              backgroundColor: colors.accent,
+              marginBottom: 20,
+              marginHorizontal: 8,
+            }}
+            onPress={() => {
+              setabexpand(!abexpand);
             }}
           >
-            <Title style={{ color: colors.textc }}>Logout</Title>
-            <Feather name="power" size={27} color={"tomato"} />
-          </View>
-        </Card>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                margin: 15,
+                alignItems: "center",
+              }}
+            >
+              <View>
+                <Title style={{ color: colors.textc }}>About Us</Title>
+                {!abexpand ? (
+                  <Animatable.View animation="bounceIn">
+                    <Paragraph style={{ color: colors.textc }}>
+                      Tap to expand
+                    </Paragraph>
+                  </Animatable.View>
+                ) : null}
+              </View>
+              <Feather
+                onPress={() => {
+                  setabexpand(!abexpand);
+                }}
+                name={abexpand ? "chevron-up" : "users"}
+                size={27}
+                color={colors.textc}
+              />
+            </View>
+            {abexpand ? (
+              <Animatable.View
+                animation="bounceIn"
+                style={{
+                  margin: 15,
+                  alignItems: "center",
+                }}
+              >
+                <Paragraph style={{ color: colors.textc }}>
+                  Helljcdbsvshvjbsdjvdvsdvn sd vjhsdvsdvhsd v dsv sd vsdhvhdbs
+                </Paragraph>
+              </Animatable.View>
+            ) : null}
+          </Card>
+        </Animatable.View>
+        <Animatable.View delay={300} animation="slideInRight">
+          <Card
+            elevation={6}
+            style={{
+              backgroundColor: colors.accent,
+              marginBottom: 20,
+              marginHorizontal: 8,
+            }}
+            onPress={() => {
+              setppexpand(!ppexpand);
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                margin: 15,
+                alignItems: "center",
+              }}
+            >
+              <View>
+                <Title style={{ color: colors.textc }}>Privacy policy</Title>
+                {!ppexpand ? (
+                  <Animatable.View animation="bounceIn">
+                    <Paragraph style={{ color: colors.textc }}>
+                      Tap to expand
+                    </Paragraph>
+                  </Animatable.View>
+                ) : null}
+              </View>
+              <Feather
+                onPress={() => {
+                  setppexpand(!ppexpand);
+                }}
+                name={ppexpand ? "chevron-up" : "file-text"}
+                size={27}
+                color={colors.textc}
+              />
+            </View>
+            {ppexpand ? (
+              <Animatable.View
+                animation="bounceIn"
+                style={{
+                  margin: 15,
+                  alignItems: "center",
+                }}
+              >
+                <Paragraph style={{ color: colors.textc }}>
+                  We don't know what to say here, but it looks cool.{"\n"}
+                  Anyways about your data, we are broke and can't afford to
+                  store your data unless its necessary. so yeah we respect your
+                  privacy :)
+                </Paragraph>
+              </Animatable.View>
+            ) : null}
+          </Card>
+        </Animatable.View>
+        <Animatable.View delay={400} animation="slideInRight">
+          <Card
+            elevation={6}
+            style={{
+              backgroundColor: colors.accent,
+              marginBottom: 20,
+              marginHorizontal: 8,
+            }}
+            onPress={() => {
+              setloading(true);
+              logout(state.token);
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                margin: 15,
+                alignItems: "center",
+              }}
+            >
+              <Title style={{ color: colors.textc }}>Logout</Title>
+              <Feather name="power" size={27} color={"tomato"} />
+            </View>
+          </Card>
+        </Animatable.View>
       </ScrollView>
     );
   }
@@ -261,11 +279,7 @@ export default function profile() {
       }
     };
     if (MainC.state.SavedFeeds == null) {
-      return (
-        <View style={styles.loadingcontainer}>
-          <ActivityIndicator size={45} animating={true} color="#2365BB" />
-        </View>
-      );
+      return <Loader />;
     }
     return (
       <View>

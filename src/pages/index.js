@@ -9,8 +9,7 @@ import Auth from "./AuthNavigator";
 import Main from "./MainNavigator";
 import { Context } from "../Context/AuthContext";
 import { Provider as PaperProvider } from "react-native-paper";
-import { View, Text } from "react-native";
-
+import Loader from "../components/Loading";
 const theme = {
   ...DefaultTheme,
   dark: true,
@@ -43,7 +42,7 @@ export default function Index() {
     tryLocalSignin();
   }, []);
   if (state.token == "") {
-    return <View></View>;
+    return <Loader />;
   }
   return (
     <PaperProvider theme={state.darktheme == "true" ? Darktheme : theme}>
