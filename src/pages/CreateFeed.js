@@ -2,21 +2,28 @@ import React, { useContext, useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Context } from "../Context/MainDataContext";
 import { Context as Auth } from "../Context/AuthContext";
-import { useTheme, TextInput, Button } from "react-native-paper";
+import { useTheme, TextInput, Button, Snackbar } from "react-native-paper";
+import Loader from "../components/Loading";
 
 export default function CreateFeed({ navigation }) {
   const { colors } = useTheme();
-  const { state } = useContext(Context);
+  const { state, Add_feed, clearmess } = useContext(Context);
   const auth = useContext(Auth);
 
+  const onDismissSnackBar = () => clearmess();
   const [Name, setName] = useState(null);
   const [Url, setUrl] = useState(null);
+  const [Loading, setLoading] = useState(false);
 
   const clearall = () => {
     setName(null);
     setUrl(null);
     navigation.goBack();
   };
+  if (Loading) {
+    return <Loader />;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -46,7 +53,14 @@ export default function CreateFeed({ navigation }) {
         <Button
           mode="contained"
           style={{ margin: 10 }}
-          onPress={() => console.log("Pressed")}
+          onPress={() => {
+            setLoading(true);
+            Add_feed({
+              token: auth.state.token,
+              url: Url,
+              name: Name,
+            });
+          }}
         >
           Save
         </Button>
@@ -58,6 +72,11 @@ export default function CreateFeed({ navigation }) {
           Cancel
         </Button>
       </View>
+      {state.ErrorMessage ? (
+        <Snackbar visible={true} onDismiss={onDismissSnackBar}>
+          {state.ErrorMessage}
+        </Snackbar>
+      ) : null}
     </View>
   );
 }

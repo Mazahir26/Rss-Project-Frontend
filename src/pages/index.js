@@ -21,6 +21,7 @@ const theme = {
     accent: "#F7F7F7",
     textc: "black",
     bg: "#eee",
+    notification: "#2365BB",
   },
 };
 const Darktheme = {
@@ -33,6 +34,8 @@ const Darktheme = {
     accent: "#141414",
     textc: "#ccc",
     bg: "#222",
+    onSurface: "#222",
+    notification: "#2365BB",
   },
 };
 

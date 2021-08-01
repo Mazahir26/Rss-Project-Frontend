@@ -53,6 +53,9 @@ const DataReducer = (state, action) => {
         SavedFeeds: temp,
       };
     case "setmessage":
+      console.log("====================================");
+      console.log("Initial Error");
+      console.log("====================================");
       return {
         ...state,
         ErrorMessage: action.payload,
@@ -60,6 +63,19 @@ const DataReducer = (state, action) => {
         UserLinks: [],
         AllFeeds: [],
         SavedFeeds: [],
+      };
+    case "updateMessage":
+      console.log("====================================");
+      console.log("NetWork Error");
+      console.log("====================================");
+      return {
+        ...state,
+        ErrorMessage: action.payload,
+      };
+    case "ClearMessage":
+      return {
+        ...state,
+        ErrorMessage: null,
       };
     default:
       return state;
@@ -78,19 +94,29 @@ const userFeed =
     dispatch({ type: "get_user_feed", payload: { data, ufeed } });
   };
 
-const userFeed =
+const Add_feed =
   (dispatch) =>
   async ({ token, url, name }) => {
     const ufeed = await AddFeed(name, url, token);
     if (ufeed == "du") {
       dispatch({
-        type: "setmessage",
+        type: "updateMessage",
         payload: "Oops! This feed already exists",
       });
       return;
     }
+    if (ufeed == "In") {
+      dispatch({
+        type: "updateMessage",
+        payload: "Invalid Url",
+      });
+      return;
+    }
     if (ufeed == null) {
-      dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
+      dispatch({
+        type: "updateMessage",
+        payload: "Oops! Something went wrong.",
+      });
       return;
     }
     dispatch({ type: "update_allfeeds", payload: ufeed });
@@ -104,6 +130,9 @@ const allFeeds = (dispatch) => async () => {
   } else {
     dispatch({ type: "get_all_feed", payload: ufeed });
   }
+};
+const clearmess = (dispatch) => () => {
+  dispatch({ type: "ClearMessage" });
 };
 
 const savedFeeds =
@@ -125,7 +154,10 @@ const save_URL =
     console.log("Context 99");
     if (ufeed == null) {
       console.log("Context 101");
-      dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
+      dispatch({
+        type: "updateMessage",
+        payload: "Oops! Something went wrong.",
+      });
     }
   };
 
@@ -134,7 +166,10 @@ const delete_URL =
   async ({ token, id }) => {
     const ufeed = await deleteUrl(id, token);
     if (ufeed == null) {
-      dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
+      dispatch({
+        type: "updateMessage",
+        payload: "Oops! Something went wrong.",
+      });
     }
   };
 
@@ -143,7 +178,10 @@ const SubscribeFeed =
   async ({ token, id }) => {
     const ufeed = await Subscribe(id, token);
     if (ufeed == null) {
-      dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
+      dispatch({
+        type: "updateMessage",
+        payload: "Oops! Something went wrong.",
+      });
     }
   };
 
@@ -152,7 +190,10 @@ const UnSubscribeFeed =
   async ({ token, id }) => {
     const ufeed = await UnSubscribe(id, token);
     if (ufeed == null) {
-      dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
+      dispatch({
+        type: "updateMessage",
+        payload: "Oops! Something went wrong.",
+      });
     }
   };
 
@@ -166,6 +207,8 @@ export const { Provider, Context } = createDataContext(
     delete_URL,
     SubscribeFeed,
     UnSubscribeFeed,
+    Add_feed,
+    clearmess,
   },
   {
     UserLinks: null,

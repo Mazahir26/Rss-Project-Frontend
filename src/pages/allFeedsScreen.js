@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import Cardfeed from "../components/AllfeedCard";
 import Constants from "expo-constants";
-import { Searchbar, FAB } from "react-native-paper";
+import { Searchbar, FAB, Snackbar } from "react-native-paper";
 import SingleFeed from "./SingleFeedPage";
 import CreateFeed from "./CreateFeed";
 import { useTheme } from "react-native-paper";
@@ -15,7 +21,7 @@ const Stack = createNativeStackNavigator();
 
 export default function allFeed({ parseurl }) {
   const { colors } = useTheme();
-  const { state, SubscribeFeed, UnSubscribeFeed, allFeeds } =
+  const { state, SubscribeFeed, UnSubscribeFeed, allFeeds, clearmess } =
     useContext(Context);
   const auth = useContext(Auth);
 
@@ -38,7 +44,7 @@ export default function allFeed({ parseurl }) {
     const [Feeds, setFeeds] = useState(state.AllFeeds);
     const [Refreshing, setRefreshing] = useState(false);
     const [fabexpanded, setfabexpanded] = useState(false);
-
+    const onDismissSnackBar = () => clearmess();
     useEffect(() => {
       setRefreshing(false);
     }, []);
@@ -76,6 +82,16 @@ export default function allFeed({ parseurl }) {
           value={searchQuery}
         />
         <FlatList
+          ListFooterComponent={() => {
+            return (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("CreateFeed")}
+                style={{ margin: 15, alignItems: "center" }}
+              >
+                <Text style={{ fontSize: 25, color: colors.textc }}>+</Text>
+              </TouchableOpacity>
+            );
+          }}
           onRefresh={() => {
             allFeeds();
             setRefreshing(true);
@@ -106,6 +122,11 @@ export default function allFeed({ parseurl }) {
           onLongPress={() => setfabexpanded(!fabexpanded)}
           color={colors.primary}
         />
+        {state.ErrorMessage ? (
+          <Snackbar visible={true} onDismiss={onDismissSnackBar}>
+            {state.ErrorMessage}
+          </Snackbar>
+        ) : null}
       </View>
     );
   }

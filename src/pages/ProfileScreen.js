@@ -11,7 +11,7 @@ import * as Animatable from "react-native-animatable";
 import Constants from "expo-constants";
 import { useTheme } from "react-native-paper";
 import { Context } from "../Context/AuthContext";
-import { Card, Title, Paragraph } from "react-native-paper";
+import { Card, Title, Paragraph, Snackbar } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import { Context as Main } from "../Context/MainDataContext";
@@ -22,6 +22,7 @@ export default function profile() {
   const { state, toggledarktheme, logout } = useContext(Context);
   const MainC = useContext(Main);
   const [loading, setloading] = useState(false);
+  const onDismissSnackBar = () => MainC.clearmess();
 
   const { colors } = useTheme();
 
@@ -250,6 +251,11 @@ export default function profile() {
             </View>
           </Card>
         </Animatable.View>
+        {MainC.state.ErrorMessage ? (
+          <Snackbar visible={true} onDismiss={onDismissSnackBar}>
+            {MainC.state.ErrorMessage}
+          </Snackbar>
+        ) : null}
       </ScrollView>
     );
   }
@@ -360,6 +366,11 @@ export default function profile() {
             );
           }}
         />
+        {MainC.state.ErrorMessage ? (
+          <Snackbar visible={true} onDismiss={onDismissSnackBar}>
+            {MainC.state.ErrorMessage}
+          </Snackbar>
+        ) : null}
       </View>
     );
   }

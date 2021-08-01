@@ -4,15 +4,17 @@ import * as Animatable from "react-native-animatable";
 import Cardfeed from "../components/FeedCard";
 import Constants from "expo-constants";
 import PagerView from "react-native-pager-view";
-import { IconButton } from "react-native-paper";
+import { IconButton, Snackbar } from "react-native-paper";
 import { Context } from "../Context/MainDataContext";
 import { Context as Auth } from "../Context/AuthContext";
 
 export default function Home() {
-  const { state, userFeed, save_URL, delete_URL } = useContext(Context);
+  const { state, userFeed, save_URL, delete_URL, clearmess } =
+    useContext(Context);
   const auth = useContext(Auth);
   const [page, setPage] = useState(0);
   const [button, setbutton] = useState(false);
+  const onDismissSnackBar = () => clearmess();
 
   useEffect(() => {
     if (button == true) {
@@ -31,7 +33,8 @@ export default function Home() {
           color="#2365BB"
           size={30}
           style={{
-            backgroundColor: auth.state.darktheme == "true" ? "#141414" : "white",
+            backgroundColor:
+              auth.state.darktheme == "true" ? "#141414" : "white",
           }}
           onPress={() => {
             userFeed({ token: auth.state.token });
@@ -59,6 +62,11 @@ export default function Home() {
             userFeed({ token: auth.state.token });
           }}
         />
+        {state.ErrorMessage ? (
+          <Snackbar visible={true} onDismiss={onDismissSnackBar}>
+            {state.ErrorMessage}
+          </Snackbar>
+        ) : null}
       </Animatable.View>
     );
   };
@@ -161,6 +169,11 @@ export default function Home() {
           />
         </Animatable.View>
       )}
+      {state.ErrorMessage ? (
+        <Snackbar visible={true} onDismiss={onDismissSnackBar}>
+          {state.ErrorMessage}
+        </Snackbar>
+      ) : null}
     </View>
   );
 }

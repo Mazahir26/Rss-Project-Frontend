@@ -206,6 +206,12 @@ export function UnSubscribe(id, token) {
 }
 export function AddFeed(name, feed, token) {
   if (!token) return null;
+  if (!validURL(feed)) {
+    return "In";
+  }
+  if (!validFeed(feed)) {
+    return "In";
+  }
   return axios
     .post(
       "/feed",
@@ -271,4 +277,19 @@ function validURL(str) {
     "i"
   ); // fragment locator
   return !!pattern.test(str);
+}
+
+function validFeed(Url) {
+  return fetch(Url)
+    .then((response) => response.text())
+    .then((responseData) => rssParser.parse(responseData))
+    .then((rss) => {
+      if (!rss.items) {
+        return false;
+      } else return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
 }
