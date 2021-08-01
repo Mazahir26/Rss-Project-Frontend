@@ -7,6 +7,8 @@ import {
   ScrollView,
   Share,
 } from "react-native";
+import Empty from "../components/Empty";
+
 import * as Animatable from "react-native-animatable";
 import Constants from "expo-constants";
 import { useTheme } from "react-native-paper";
@@ -289,6 +291,16 @@ export default function profile() {
     return (
       <View>
         <FlatList
+          ListEmptyComponent={() => (
+            <Empty
+              heading="There are no saved feeds"
+              button="Refresh"
+              onPress={() => {
+                MainC.savedFeeds({ token: state.token });
+                setRefreshing(true);
+              }}
+            />
+          )}
           onRefresh={() => {
             MainC.savedFeeds({ token: state.token });
             setRefreshing(true);

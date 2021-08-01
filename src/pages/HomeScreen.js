@@ -7,6 +7,7 @@ import PagerView from "react-native-pager-view";
 import { IconButton, Snackbar } from "react-native-paper";
 import { Context } from "../Context/MainDataContext";
 import { Context as Auth } from "../Context/AuthContext";
+import Empty from "../components/Empty";
 
 export default function Home() {
   const { state, userFeed, save_URL, delete_URL, clearmess } =
@@ -27,20 +28,14 @@ export default function Home() {
   }, [button]);
   if (state.UserFeed.length == 0) {
     return (
-      <View style={styles.container}>
-        <IconButton
-          icon="refresh"
-          color="#2365BB"
-          size={30}
-          style={{
-            backgroundColor:
-              auth.state.darktheme == "true" ? "#141414" : "white",
-          }}
-          onPress={() => {
-            userFeed({ token: auth.state.token });
-          }}
-        />
-      </View>
+      <Empty
+        heading="Feels Empty"
+        subheading="Try subscribing to feeds."
+        button="Refresh"
+        onPress={() => {
+          userFeed({ token: auth.state.token });
+        }}
+      />
     );
   }
   Refreshbutton = () => {

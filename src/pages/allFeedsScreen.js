@@ -16,12 +16,13 @@ import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import { Context } from "../Context/MainDataContext";
 import { Context as Auth } from "../Context/AuthContext";
 import * as Animatable from "react-native-animatable";
+import Empty from "../components/Empty";
 
 const Stack = createNativeStackNavigator();
 
 export default function allFeed({ parseurl }) {
   const { colors } = useTheme();
-  const { state, SubscribeFeed, UnSubscribeFeed, allFeeds, clearmess } =
+  const { state, SubscribeFeed, UnSubscribeFeed, clearmess, refresh_feeds } =
     useContext(Context);
   const auth = useContext(Auth);
 
@@ -82,6 +83,16 @@ export default function allFeed({ parseurl }) {
           value={searchQuery}
         />
         <FlatList
+          ListEmptyComponent={() => (
+            <Empty
+              heading="No Feeds"
+              subheading="Add one, help others"
+              button="Refresh"
+              onPress={() => {
+                refresh_feeds({ token: auth.state.token });
+              }}
+            />
+          )}
           ListFooterComponent={() => {
             return (
               <TouchableOpacity
@@ -93,7 +104,7 @@ export default function allFeed({ parseurl }) {
             );
           }}
           onRefresh={() => {
-            allFeeds();
+            refresh_feeds({ token: auth.state.token });
             setRefreshing(true);
           }}
           refreshing={Refreshing}

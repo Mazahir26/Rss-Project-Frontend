@@ -53,9 +53,6 @@ const DataReducer = (state, action) => {
         SavedFeeds: temp,
       };
     case "setmessage":
-      console.log("====================================");
-      console.log("Initial Error");
-      console.log("====================================");
       return {
         ...state,
         ErrorMessage: action.payload,
@@ -65,9 +62,6 @@ const DataReducer = (state, action) => {
         SavedFeeds: [],
       };
     case "updateMessage":
-      console.log("====================================");
-      console.log("NetWork Error");
-      console.log("====================================");
       return {
         ...state,
         ErrorMessage: action.payload,
@@ -77,11 +71,36 @@ const DataReducer = (state, action) => {
         ...state,
         ErrorMessage: null,
       };
+    case "refresh_Feeds":
+      return {
+        ...state,
+        UserLinks: action.payload.userlinks,
+        AllFeeds: action.payload.allfeeds,
+      };
     default:
       return state;
   }
 };
 
+const refresh_feeds =
+  (dispatch) =>
+  async ({ token }) => {
+    const ufeed = await getUserFeed(token);
+    if (ufeed == null) {
+      dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
+      return;
+    }
+    const allfeeed = await getAllFeed();
+    if (allfeeed == null) {
+      dispatch({ type: "setmessage", payload: "Oops! Something went wrong." });
+      return;
+    } else {
+      dispatch({
+        type: "refresh_Feeds",
+        payload: { userlinks: ufeed, allfeeds: allfeeed },
+      });
+    }
+  };
 const userFeed =
   (dispatch) =>
   async ({ token }) => {
@@ -209,6 +228,7 @@ export const { Provider, Context } = createDataContext(
     UnSubscribeFeed,
     Add_feed,
     clearmess,
+    refresh_feeds,
   },
   {
     UserLinks: null,

@@ -85,6 +85,10 @@ export async function MakeUserfeed(Links) {
   for (let i = 0; i < Links.length; i++) {
     const res = await getParsedFeed(Links[i].feed);
     data = data.concat(res);
+    if (data.length > 15) {
+      data.sort(Date_sortFunction);
+      return data;
+    }
   }
   data.sort(Date_sortFunction);
   return data;
@@ -204,14 +208,16 @@ export function UnSubscribe(id, token) {
       }
     });
 }
-export function AddFeed(name, feed, token) {
+export async function AddFeed(name, feed, token) {
   if (!token) return null;
   if (!validURL(feed)) {
     return "In";
   }
-  if (!validFeed(feed)) {
+  const val = await validFeed(feed);
+  if (!val) {
     return "In";
   }
+
   return axios
     .post(
       "/feed",

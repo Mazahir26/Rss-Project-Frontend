@@ -3,6 +3,8 @@ import { Text, View, FlatList } from "react-native";
 import { Card, Paragraph } from "react-native-paper";
 import { useTheme } from "react-native-paper";
 import Loader from "../components/Loading";
+import Empty from "../components/Empty";
+
 export default function feed({ navigation, route, parseurl }) {
   const { colors } = useTheme();
   const [data, setData] = useState(null);
@@ -19,8 +21,12 @@ export default function feed({ navigation, route, parseurl }) {
         <Loader />
       ) : (
         <FlatList
-          // styles={{
-          // }}
+          ListEmptyComponent={() => (
+            <Empty
+              heading="Can't Load the feed"
+              subheading="Something is wrong."
+            />
+          )}
           ListHeaderComponent={() => (
             <View style={{ marginVertical: 25, alignSelf: "center" }}>
               <Text

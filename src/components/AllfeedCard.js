@@ -37,14 +37,15 @@ export default function feedcard({
               justifyContent: "center",
             }}
             disabled={loading}
-            onPress={() => {
+            onPress={async () => {
               setloading(true);
               if (Subscribed) {
-                Subscribe(id, false);
+                await Subscribe(id, false);
+                setSubscribed(!Subscribed);
               } else {
-                Subscribe(id, true);
+                await Subscribe(id, true);
+                setSubscribed(!Subscribed);
               }
-              setSubscribed(!Subscribed);
               setloading(false);
             }}
           >

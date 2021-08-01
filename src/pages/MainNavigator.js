@@ -143,11 +143,10 @@ export default function Main({ navigation }) {
   ) {
     return (
       <>
-        <StatusBar style="auto" />
+        <StatusBar hidden={true} />
         <View
           style={{
             flex: 1,
-            marginTop: 40,
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: colors.accent,
