@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Card, Title, Paragraph } from "react-native-paper";
-import { View, Share, TouchableOpacity } from "react-native";
+import { View, Share, TouchableOpacity, Dimensions } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 export default function card({
   title,
   content,
@@ -35,11 +37,22 @@ export default function card({
     }
   };
   return (
-    <Card style={{ backgroundColor: colors.bg }} theme={{ roundness: 0 }}>
+    <Card
+      style={{
+        backgroundColor: colors.bg,
+      }}
+      theme={{ roundness: 0 }}
+    >
       <Card.Content>
-        <Card style={{ backgroundColor: colors.accent }} elevation={4}>
+        <Card
+          style={{
+            backgroundColor: colors.accent,
+            height: windowHeight - (windowHeight * 0.125),
+          }}
+          elevation={4}
+        >
           <Card.Cover source={{ uri: imageurl }} resizeMode="cover" />
-          <Card.Content style={{ height: 370 }}>
+          <Card.Content style={{ height: windowHeight/1.92 }}>
             <Title style={{ color: colors.textc }}>{title}</Title>
             <Paragraph style={{ color: colors.textc }} numberOfLines={12}>
               {content}

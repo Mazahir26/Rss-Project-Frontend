@@ -10,7 +10,9 @@ const authReducer = (state, action) => {
         darktheme: action.payload.darktheme,
       };
     case "signout":
-      return { token: null, onBoarded: true };
+      return { ...state, token: null, onBoarded: true };
+    case "logout":
+      return { ...state, token: null };
     case "OnBoarded":
       return { ...state, onBoarded: true };
     case "toggledarktheme":
@@ -30,7 +32,7 @@ const tryLocalSignin = (dispatch) => async () => {
       dispatch({ type: "signin", payload: { token, darktheme: "true" } });
     }
   } else {
-    dispatch({ type: "signout" });
+    dispatch({ type: "logout" });
   }
 };
 const signup =
@@ -45,7 +47,7 @@ const logout =
     await SecureStore.deleteItemAsync("token", Token);
     dispatch({ type: "signout" });
   };
-const OnBoarded = (dispatch) => () => {
+const OnBoard = (dispatch) => () => {
   dispatch({ type: "OnBoarded" });
 };
 const toggledarktheme =
@@ -56,6 +58,6 @@ const toggledarktheme =
   };
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { OnBoarded, logout, signup, tryLocalSignin, toggledarktheme },
-  { token: "", onBoarded: null, darktheme: "true" }
+  { OnBoard, logout, signup, tryLocalSignin, toggledarktheme },
+  { token: "", onBoarded: false, darktheme: "true" }
 );

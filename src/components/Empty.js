@@ -6,7 +6,7 @@ import { useTheme } from "react-native-paper";
 export default function empty({ heading, subheading, button, onPress }) {
   const { colors } = useTheme();
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, marginHorizontal: 15 }}>
       <View
         style={{
           flex: 0.5,
@@ -26,7 +26,7 @@ export default function empty({ heading, subheading, button, onPress }) {
               alignItems: "center",
             }}
           >
-            <Text style={{ color: colors.textc, fontSize: 33 }}>
+            <Text style={{ color: colors.textc, fontSize: 30 }}>
               {heading.toUpperCase()}
             </Text>
             {subheading ? (
