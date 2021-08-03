@@ -3,7 +3,13 @@ import LottieView from "lottie-react-native";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useTheme } from "react-native-paper";
 
-export default function empty({ heading, subheading, button, onPress }) {
+export default function empty({
+  heading,
+  subheading,
+  button,
+  onPress,
+  or = true,
+}) {
   const { colors } = useTheme();
   return (
     <View style={{ flex: 1, marginHorizontal: 15 }}>
@@ -26,7 +32,9 @@ export default function empty({ heading, subheading, button, onPress }) {
               alignItems: "center",
             }}
           >
-            <Text style={{ color: colors.textc, fontSize: 30 }}>
+            <Text
+              style={{ color: colors.textc, fontSize: 30, textAlign: "center" }}
+            >
               {heading.toUpperCase()}
             </Text>
             {subheading ? (
@@ -45,7 +53,7 @@ export default function empty({ heading, subheading, button, onPress }) {
           </View>
         ) : null}
 
-        {button ? (
+        {or ? (
           <View
             style={{
               justifyContent: "center",
