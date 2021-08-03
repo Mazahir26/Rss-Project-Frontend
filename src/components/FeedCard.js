@@ -6,6 +6,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
+import * as WebBrowser from "expo-web-browser";
 export default function card({
   title,
   content,
@@ -47,12 +48,12 @@ export default function card({
         <Card
           style={{
             backgroundColor: colors.accent,
-            height: windowHeight - (windowHeight * 0.125),
+            height: windowHeight - windowHeight * 0.125,
           }}
           elevation={4}
         >
           <Card.Cover source={{ uri: imageurl }} resizeMode="cover" />
-          <Card.Content style={{ height: windowHeight/1.92 }}>
+          <Card.Content style={{ height: windowHeight / 1.92 }}>
             <Title style={{ color: colors.textc }}>{title}</Title>
             <Paragraph style={{ color: colors.textc }} numberOfLines={12}>
               {content}
@@ -95,6 +96,16 @@ export default function card({
               </TouchableOpacity>
               <TouchableOpacity
                 style={{ marginHorizontal: 7, margin: 5 }}
+                onPress={() => WebBrowser.openBrowserAsync(url)}
+              >
+                <MaterialIcons
+                  name="open-in-browser"
+                  size={24}
+                  color={colors.textc}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ marginHorizontal: 7, margin: 5 }}
                 onPress={onShare}
               >
                 <MaterialCommunityIcons
@@ -110,10 +121,3 @@ export default function card({
     </Card>
   );
 }
-
-// {/* <Card elevation={4} style={{marginTop: 10}}>
-//   <Card.Content style={{flexDirection: "row", justifyContent: "space-between"}}>
-//     <Paragraph style={{fontWeight: "bold"}}>{author}</Paragraph>
-//     <MaterialCommunityIcons name="share-variant" size={24} color="black" />
-//   </Card.Content>
-// </Card> */}

@@ -6,9 +6,9 @@ import {
   FlatList,
   ScrollView,
   Share,
+  Linking,
 } from "react-native";
 import Empty from "../components/Empty";
-
 import * as Animatable from "react-native-animatable";
 import Constants from "expo-constants";
 import { useTheme } from "react-native-paper";
@@ -165,8 +165,19 @@ export default function profile() {
                 }}
               >
                 <Paragraph style={{ color: colors.textc }}>
-                  Helljcdbsvshvjbsdjvdvsdvn sd vjhsdvsdvhsd v dsv sd vsdhvhdbs
+                  We Develope apps for fun. All are apps are open source, you
+                  can support us by giving us a star on github.
                 </Paragraph>
+                <Text
+                  onPress={() =>
+                    Linking.openURL(
+                      "https://github.com/Mazahir26/Rss-Project-Frontend"
+                    )
+                  }
+                  style={{ color: colors.primary }}
+                >
+                  github
+                </Text>
               </Animatable.View>
             ) : null}
           </Card>

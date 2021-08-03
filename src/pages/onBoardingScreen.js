@@ -10,6 +10,11 @@ import {
   LayoutAnimation,
   Platform,
 } from "react-native";
+import {
+  useFonts,
+  Inter_600SemiBold,
+  Inter_400Regular,
+} from "@expo-google-fonts/inter";
 import { Context } from "../Context/AuthContext";
 import { Card } from "react-native-paper";
 const windowWidth = Dimensions.get("window").width;
@@ -64,11 +69,20 @@ function Pages({ heading, content, index }) {
                 fontWeight: "bold",
                 marginVertical: 10,
                 textAlign: "center",
+                fontFamily: "Inter_600SemiBold",
               }}
             >
               {heading}
             </Text>
-            <Text style={{ fontSize: 16, textAlign: "center" }}>{content}</Text>
+            <Text
+              style={{
+                fontSize: 16,
+                textAlign: "center",
+                fontFamily: "Inter_400Regular",
+              }}
+            >
+              {content}
+            </Text>
           </Card.Content>
         </Card>
       </Card>
@@ -81,6 +95,14 @@ export default function onBoard() {
   const [page, setPage] = useState(0);
   const swiper = useRef(null);
 
+  let [fontsLoaded] = useFonts({
+    Inter_600SemiBold,
+    Inter_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return <View></View>;
+  }
   return (
     <View style={{ flex: 1 }}>
       <PagerView
@@ -151,6 +173,7 @@ export default function onBoard() {
                   marginVertical: 6,
                   fontSize: 16,
                   color: "black",
+                  fontFamily: "Inter_400Regular",
                 }}
               >
                 BACK
@@ -174,6 +197,7 @@ export default function onBoard() {
                 style={{
                   fontSize: 16,
                   color: "black",
+                  fontFamily: "Inter_400Regular",
                 }}
               >
                 SKIP
@@ -201,6 +225,7 @@ export default function onBoard() {
                   marginVertical: 8,
                   fontSize: 16,
                   color: "black",
+                  fontFamily: "Inter_400Regular",
                 }}
               >
                 NEXT
@@ -233,6 +258,7 @@ export default function onBoard() {
                   marginVertical: 6,
                   fontSize: 16,
                   color: "black",
+                  fontFamily: "Inter_400Regular",
                 }}
               >
                 SIGNUP

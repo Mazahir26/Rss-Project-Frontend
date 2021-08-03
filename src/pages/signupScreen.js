@@ -7,6 +7,7 @@ import {
   Text,
   Keyboard,
   Image,
+  StatusBar,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { TouchableRipple } from "react-native-paper";
@@ -98,6 +99,8 @@ export default function login({ navigation, Setcontext }) {
       end={[0, 0]}
       style={styles.container}
     >
+      <StatusBar backgroundColor="#628cd4" />
+
       <View style={styles.Headdingcontainer}>
         {!keyboardStatus ? (
           <Animatable.Image

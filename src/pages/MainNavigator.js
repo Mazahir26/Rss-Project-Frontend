@@ -6,7 +6,6 @@ import { View, Text } from "react-native";
 import { Context } from "../Context/AuthContext";
 import { Context as DataContext } from "../Context/MainDataContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import axios from "../api/api_axios";
 import * as rssParser from "react-native-rss-parser";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
@@ -80,61 +79,8 @@ export default function Main({ navigation }) {
     MainC.allFeeds();
   }, []);
 
-  function subscribe(id, ok) {
-    if (id == null) return null;
-    if (!state.token) return null;
-    //if ok is false then unsubscribe
-    if (!ok) {
-      return axios
-        .put(
-          `/feed/${id}/unsubscribe`,
-          {},
-          {
-            headers: {
-              Authorization: `Token ${state.token}`,
-            },
-          }
-        )
-        .then((res) => {
-          return res.data;
-        })
-        .catch((err) => {
-          if (err.response.data.error) {
-            console.log(err.response.data.error);
-            return null;
-          } else {
-            console.log(err);
-            return null;
-          }
-        });
-    } else {
-      return axios
-        .put(
-          `/feed/${id}/subscribe`,
-          {},
-          {
-            headers: {
-              Authorization: `Token ${state.token}`,
-            },
-          }
-        )
-        .then((res) => {
-          return res.data;
-        })
-        .catch((err) => {
-          if (err.response.data.error) {
-            console.log(err.response.data.error);
-            return null;
-          } else {
-            console.log(err);
-            return null;
-          }
-        });
-    }
-  }
-
   function allfeed() {
-    return <AllFeed Subscribe={subscribe} parseurl={getParsedFeed} />;
+    return <AllFeed parseurl={getParsedFeed} />;
   }
   if (
     MainC.state.UserFeed == null ||

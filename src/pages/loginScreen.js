@@ -7,6 +7,7 @@ import {
   Text,
   Image,
   Keyboard,
+  StatusBar,
 } from "react-native";
 import { TouchableRipple } from "react-native-paper";
 import * as Animatable from "react-native-animatable";
@@ -20,8 +21,8 @@ import {
 } from "@expo-google-fonts/inter";
 export default function login({ navigation, Setcontext }) {
   const [showpassword, setshowpassword] = useState(false);
-  const [username, setusername] = useState("Tester");
-  const [password, setpassword] = useState("Mazahir@123");
+  const [username, setusername] = useState("");
+  const [password, setpassword] = useState("");
   const [message, setmessage] = useState(null);
 
   useEffect(() => {
@@ -95,6 +96,7 @@ export default function login({ navigation, Setcontext }) {
       end={[0, 0]}
       style={styles.container}
     >
+      <StatusBar backgroundColor="#8f85cc" />
       <View style={styles.Headdingcontainer}>
         {!keyboardStatus ? (
           <Animatable.Image
