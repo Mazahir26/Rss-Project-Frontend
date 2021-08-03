@@ -20,10 +20,10 @@ it's a Rss News app made with React Native and Expo.
 
 - Run on iOS: `yarn ios` (or `npm run ios`).
 
-<!-- ### Preview
+### Preview
 
 <img  src = "Images/Preview_Image_1.png" width="200"/><img src = "Images/Preview_Image_2.png" width="200"/>
-<img src = "Images/Preview_Image_3.png" width="200"/><img src = "Images/Preview_Image_4.png" width="200"/> -->
+<img src = "Images/Preview_Image_3.png" width="200"/><img src = "Images/Preview_Image_4.png" width="200"/>
 
 ## Features
 
