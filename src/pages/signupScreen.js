@@ -6,7 +6,6 @@ import {
   TextInput,
   Text,
   Keyboard,
-  Image,
   StatusBar,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
@@ -175,6 +174,7 @@ export default function login({ navigation, Setcontext }) {
             {password ? (
               password.length > 0 ? (
                 <TouchableOpacity
+                  disabled={message == "" ? true : false}
                   onPress={() => setshowpassword(!showpassword)}
                 >
                   <MaterialCommunityIcons
@@ -216,6 +216,7 @@ export default function login({ navigation, Setcontext }) {
             {password2 ? (
               password2.length > 0 ? (
                 <TouchableOpacity
+                  disabled={message == "" ? true : false}
                   onPress={() => setshowpassword2(!showpassword2)}
                 >
                   <MaterialCommunityIcons
@@ -256,6 +257,7 @@ export default function login({ navigation, Setcontext }) {
         <TouchableOpacity
           onPress={() => navigation.navigate("Login")}
           style={{ flex: 0.05, alignItems: "center" }}
+          disabled={message == "" ? true : false}
         >
           <Animatable.View animation="slideInUp" delay={300}>
             <Text

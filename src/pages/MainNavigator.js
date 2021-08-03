@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import Home from "./HomeScreen";
 import AllFeed from "./allFeedsScreen";
 import Profile from "./ProfileScreen";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { Context } from "../Context/AuthContext";
 import { Context as DataContext } from "../Context/MainDataContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -89,7 +89,7 @@ export default function Main({ navigation }) {
   ) {
     return (
       <>
-        <StatusBar hidden={true} />
+        <StatusBar backgroundColor={colors.accent} />
         <View
           style={{
             flex: 1,

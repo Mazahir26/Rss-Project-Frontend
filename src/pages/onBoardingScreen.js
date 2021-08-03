@@ -116,8 +116,8 @@ export default function onBoard() {
         }}
       >
         <Pages
-          heading="F-Reads"
-          content="Stay up to date with Freads, Get article and news from all your favorite websites."
+          heading="F-Read"
+          content="Stay up to date with Fread, Get article and news from all your favorite websites."
           index={1}
         />
         <Pages

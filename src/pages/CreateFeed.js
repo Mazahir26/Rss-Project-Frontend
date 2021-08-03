@@ -1,12 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Context } from "../Context/MainDataContext";
 import { Context as Auth } from "../Context/AuthContext";
-import { useTheme, TextInput, Button, Snackbar } from "react-native-paper";
+import { TextInput, Button, Snackbar } from "react-native-paper";
 import Loader from "../components/Loading";
 
 export default function CreateFeed({ navigation }) {
-  const { colors } = useTheme();
   const { state, Add_feed, clearmess } = useContext(Context);
   const auth = useContext(Auth);
 
@@ -18,7 +17,7 @@ export default function CreateFeed({ navigation }) {
   const clearall = () => {
     setName(null);
     setUrl(null);
-    navigation.goBack();
+    navigation.navigate("allfeed");
   };
   if (Loading) {
     return <Loader />;
