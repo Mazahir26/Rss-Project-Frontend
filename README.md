@@ -20,7 +20,7 @@ it's a Rss News app made with React Native and Expo.
     BASE_URL: "https://yourdomain.com/api",
     Version_URL: "https://yourdomain/data.json"
     };
-```
+
 
 
 - Run on both Android & iOS: `expo start` (or `npm start`).
